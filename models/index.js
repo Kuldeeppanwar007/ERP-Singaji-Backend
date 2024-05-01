@@ -1,4 +1,4 @@
 // Import Models
 
-module.exports = {
+export default {
 };

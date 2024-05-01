@@ -1,9 +1,10 @@
+import express from "express";
+import cors from "cors";
+import { database } from "./utils";
+
 // Import packages
-const express = require("express");
-const cors = require("cors");
 
 // Import utilities
-const { database } = require("./utils");
 
 // Create App
 const app = express();
@@ -16,11 +17,11 @@ app.use(express.json());
 database.mongooseConnection();
 
 // Import Routers
-// const { } = require("./routes");
+// import { } from "./routes";
 
 // START: Routes
 
 
 // END: Routes
 
-module.exports = { app };
+export { app };

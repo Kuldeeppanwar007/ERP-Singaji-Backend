@@ -1,3 +1,2 @@
 // Import Middlewares
-module.exports = {
-};
+export default {};

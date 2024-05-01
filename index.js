@@ -1,10 +1,11 @@
-require("dotenv").config();
+const http = require("http");
+const { app } = require("./app");
+
+// es6 module - require("dotenv").config();
 
 // Import packages
-const http = require("http");
 
 // Import app
-const { app } = require("./app");
 
 // Import utilities
 
