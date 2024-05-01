@@ -1,5 +1,5 @@
-const responseMessages = require("./responseMessages.config");
+import * as responseMessages from "./responseMessages.config";
 
-module.exports = {
+export {
   responseMessages,
 };

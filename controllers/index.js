@@ -1,4 +1,4 @@
 // Import Controllers
 
-module.exports = {
+export default {
 };

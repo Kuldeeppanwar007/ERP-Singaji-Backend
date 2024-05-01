@@ -1,5 +1,7 @@
+import database from "./database.util";
+
 // Import Utilities
-const database = require("./database.util");
-module.exports = {
+
+export default {
     database
 };

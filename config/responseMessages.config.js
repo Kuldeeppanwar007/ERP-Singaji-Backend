@@ -5,4 +5,4 @@ const responseMessages = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
 };
 
-module.exports = responseMessages;
+export default responseMessages;

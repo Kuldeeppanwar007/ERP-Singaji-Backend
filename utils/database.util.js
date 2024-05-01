@@ -1,5 +1,7 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+
+dotenv.config();
 
 function mongooseConnection() {
   mongoose.set("strictQuery", true);
@@ -11,4 +13,4 @@ function mongooseConnection() {
     });
 }
 
-module.exports = { mongooseConnection };
+export { mongooseConnection };
