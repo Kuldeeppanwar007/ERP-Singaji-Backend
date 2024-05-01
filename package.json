@@ -1,5 +1,6 @@
 {
   "name": "erp_modules",
+  "type": "module",
   "version": "1.0.0",
   "description": "A ERP_MODULES Api",
   "main": "index.js",
