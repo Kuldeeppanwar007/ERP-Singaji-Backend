@@ -15,14 +15,14 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-// Configure the email options
-const emailOptions = {
-  from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`, // Sender address
-  to: 'rajputnik911@gmail.com', // List of receivers
-  subject: 'Welcome Message', // Subject line
-  text: 'Thanks for joining our ssism community', // Plain text body
-  // html: '<p>Hello world in ssism</p>', // HTML body content
-};
+// // Configure the email options
+// const emailOptions = {
+//   from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`, // Sender address
+//   to: 'rajputnik911@gmail.com', // List of receivers
+//   subject: 'Welcome Message', // Subject line
+//   text: 'Thanks for joining our ssism community', // Plain text body
+//   // html: '<p>Hello world in ssism</p>', // HTML body content
+// };
 
 // Example function to send an email
 const sendMail = async (emailOptions) => {
@@ -37,6 +37,6 @@ const sendMail = async (emailOptions) => {
 };
 
 // Call the sendMail function with the email options
-sendMail(emailOptions);
+// sendMail(emailOptions);
 
 export default sendMail;
