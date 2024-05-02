@@ -1,4 +1,6 @@
-// Import Models
+// Import Models 
+import organization from "./organization.model.js";
 
-export default {
-};
+export {
+    organization
+}

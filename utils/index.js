@@ -1,7 +1,5 @@
-import database from "./database.util";
-
 // Import Utilities
-
-export default {
-    database
+import database from './database.util.js'
+export {
+    database,
 };

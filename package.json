@@ -1,5 +1,6 @@
 {
   "name": "erp_modules",
+  "type": "module",
   "version": "1.0.0",
   "description": "A ERP_MODULES Api",
   "main": "index.js",
@@ -13,6 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.0.1"
   },
   "devDependencies": {
