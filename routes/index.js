@@ -1,10 +1,9 @@
-import router1 from './router1';
-import router2 from './router2';
-
 // Import Routers
+import organizationRouter from './organization.router.js'
+import userRouter from './users.js';
 
 // Export Routers
-export default {
-    router1,
-    router2,
+export {
+    userRouter,
+    organizationRouter
 };

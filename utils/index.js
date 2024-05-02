@@ -1,7 +1,7 @@
-import database from "./database.util";
-
 // Import Utilities
-
-export default {
-    database
+import database from './database.util.js'
+import generateJwtToken from './jwt.utils.js';
+export {
+    database,
+    generateJwtToken
 };

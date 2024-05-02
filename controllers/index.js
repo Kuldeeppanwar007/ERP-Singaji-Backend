@@ -1,4 +1,6 @@
 // Import Controllers
-
-export default {
+import organizationController from "./organization.controller.js";
+// Export Controllers
+export {
+    organizationController
 };

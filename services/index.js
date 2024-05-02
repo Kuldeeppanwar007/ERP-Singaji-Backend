@@ -1,9 +1,7 @@
-import service1 from './service1';
-import service2 from './service2';
-
 // Import Services
+import organizationService from "./organization.service.js";
 
-export default {
-    service1,
-    service2
+// Export All Services
+export {
+    organizationService
 };
