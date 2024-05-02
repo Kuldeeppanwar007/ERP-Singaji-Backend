@@ -1,4 +1,4 @@
-import * as responseMessages from "./responseMessages.config";
+import responseMessages from "./responseMessages.config.js";
 
 export {
   responseMessages,

@@ -1,10 +1,6 @@
+// Import packages
 import express from "express";
 import cors from "cors";
-import { database } from "./utils";
-
-// Import packages
-
-// Import utilities
 
 // Create App
 const app = express();
@@ -13,15 +9,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Initialize database connection
-database.mongooseConnection();
-
 // Import Routers
-// import { } from "./routes";
-
+import { organizationRouter } from "./routes/index.js";
 // START: Routes
-
-
+app.use('/api/organization', organizationRouter);
 // END: Routes
 
-export { app };
+export default app;
