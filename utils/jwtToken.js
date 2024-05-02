@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 
 // Function: Generate JWT Token
-function generateJwtToken(payload) {
+const generateJwtToken = (payload) => {
     try {
         console.log(payload)
         const token = jwt.sign({ user: payload }, process.env.JWT_SECRET, { expiresIn: "1d" });
