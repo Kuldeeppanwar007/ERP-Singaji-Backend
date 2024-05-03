@@ -1,6 +1,9 @@
 // Import Dependencies
 import jwt from "jsonwebtoken";
 
+// Import Utilities
+import logger from "./logger.util.js";
+
 // Function: Generate JWT Token
 const generateJwtToken = (payload) => {
     try {
@@ -8,7 +11,7 @@ const generateJwtToken = (payload) => {
         const token = jwt.sign({ user: payload }, process.env.JWT_SECRET, { expiresIn: "1d" });
         return token;
     } catch (err) {
-        console.log(err);
+        logger.error("Error", err);
         return false;
     }
 }

@@ -1,5 +1,9 @@
+// Import Packeges
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+
+// Import Utilities
+import logger from './logger.util.js';
 
 // Load environment variables
 dotenv.config();
@@ -27,10 +31,11 @@ const emailOptions = {
 const sendMail = async (emailOptions) => {
   try {
     let info = await transporter.sendMail(emailOptions);
-    console.log('Message sent: %s', info.messageId);
+
+    logger.info(`Message sent: %s, ${info.messageId}`);
     return true;
   } catch (error) {
-    console.error('Error sending email: ', error);
+    logger.error(`Error sending email:  ${error}`);
     return false;
   }
 };

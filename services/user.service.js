@@ -3,6 +3,9 @@ import bcrypt from 'bcrypt';
 // Import Models
 import { userModel } from "../models/index.js";
 
+// Import Utilities
+import logger from "./logger.util.js";
+
 // Function: Register User
 async function registerUser(payload) {
     try {
@@ -13,21 +16,23 @@ async function registerUser(payload) {
         const user = new userModel(payload);
         await user.save();
 
-        console.log(user);
+        logger.info(`Email: ${payload.email} | Name: ${payload.name}`);
         return user;
     } catch (err) {
-        console.log(err);
+        logger.error(err);
         return false;
     }
 }
 
 // Function: Login User
 async function getUserByEmail(email) {
+
     try {
         const user = await userModel.findOne({ email });
+        logger.info('User Found Successfully !')
         return user;
     } catch (err) {
-        console.log(err);
+        logger.error(err);
         return false;
     }
 }
@@ -38,10 +43,10 @@ async function checkEmailExists(email) {
         let emailExists = false;
         const user = await userModel.findOne({ email });
         if (user) emailExists = true;
-
+        logger.info('Email Found Successfully !')
         return emailExists;
     } catch (err) {
-        console.log(err);
+        logger.error(err);
         return false;
     }
 }

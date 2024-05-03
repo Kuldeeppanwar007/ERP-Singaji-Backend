@@ -1,8 +1,10 @@
 // Import packages
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-
 dotenv.config();
+
+// Import Utilities
+import logger from "./logger.util.js";
 
 // Define a function to connect to MongoDB using mongoose
 function mongooseConnection() {
@@ -14,11 +16,11 @@ function mongooseConnection() {
     useNewUrlParser: true,
   })
     .then(() => {
-      console.log("Connected to Database");
+      logger.info("Connected to Database");
     })
     // If there is an error while connecting, log the error to the console
     .catch((err) => {
-      console.log(err);
+      logger.error(err);
     });
 }
 
