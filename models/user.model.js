@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         enum: ['student', 'faculty', 'admin'],
         required: true
     }
-});
+}, { timestamps: true });
 
 
 // Create a user model
