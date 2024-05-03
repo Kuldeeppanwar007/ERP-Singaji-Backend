@@ -11,16 +11,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    password: { salt: String, hash: String },
     role: {
         type: String,
         enum: ['student', 'faculty', 'admin'],
         required: true
     }
-});
+}, { timestamps: true });
 
 
 // Create a user model

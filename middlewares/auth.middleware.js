@@ -1,5 +1,6 @@
 // Import Dependencies
 import jwt from "jsonwebtoken";
+import { logger } from "../utils/index.js";
 
 // Middleware: Verify Token
 const verifyToken = async (req, res, next) => {
@@ -10,16 +11,16 @@ const verifyToken = async (req, res, next) => {
             const { user: { email: userEmail }, } = jwt.verify(token, process.env.JWT_SECRET);
             const user = await userService.getUserByEmail(userEmail);
             req.user = user;
-            console.log("Authentication Success");
+            logger.info("Authentication Success");
             return next();
         }
-        console.log("Authorization Failed");
+        logger.error("Authorization Failed");
         return res.status(403).send({
             hasError: true,
             message: "Authentication Failed!",
         });
     } catch (err) {
-        console.log("Authentication Failed!");
+        logger.error("Authentication Failed!");
         return res.status(403).send({
             hasError: true,
             message: "Authentication Failed!",

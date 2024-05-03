@@ -1,8 +1,10 @@
 // Import packages
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-
 dotenv.config();
+
+// Import Utilities
+import logger from "./logger.util.js";
 
 // Define a function to connect to MongoDB using mongoose
 function mongooseConnection() {
@@ -12,11 +14,11 @@ function mongooseConnection() {
   // Connect to MongoDB using the MONGODB_URL environment variable
   mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
-      console.log("Connected to Database");
+      logger.info("Connected to Database");
     })
     // If there is an error while connecting, log the error to the console
     .catch((err) => {
-      console.log(err);
+      logger.error(err);
     });
 }
 

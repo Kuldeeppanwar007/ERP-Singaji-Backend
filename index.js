@@ -5,7 +5,7 @@ import { createServer } from "http";
 import app from "./app.js";
 
 // Import utilities
-import { database } from "./utils/index.js";
+import { database, logger } from "./utils/index.js";
 
 // Initialize database connection
 database.mongooseConnection();
@@ -18,5 +18,5 @@ const port = process.env.PORT || 3000;
 
 // Listening Server 
 httpServer.listen(port, () => {
-    console.log(`🚀 App Started: http://localhost:${port}`);
+    logger.info(`🚀 App Started: http://localhost:${port}`);
 });
