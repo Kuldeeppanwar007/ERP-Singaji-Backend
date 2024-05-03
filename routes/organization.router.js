@@ -12,7 +12,7 @@ router.post('/register', organizationController.registerOrganization);
 
 router.get('/', (req, res) => {
     console.log("Entered");
-    res.send('hello')
+    res.send('Connected To Server');
 });
 
 export default router;

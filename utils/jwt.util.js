@@ -1,7 +1,6 @@
 // Import Dependencies
 import jwt from "jsonwebtoken";
 
-
 // Function: Generate JWT Token
 const generateJwtToken = (payload) => {
     try {
@@ -14,5 +13,5 @@ const generateJwtToken = (payload) => {
     }
 }
 
-export default generateJwtToken;
+export default { generateJwtToken };
 

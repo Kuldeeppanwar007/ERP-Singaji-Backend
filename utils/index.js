@@ -1,7 +1,10 @@
 // Import Utilities
 import database from './database.util.js'
-import generateJwtToken from './jwt.utils.js';
+import jwt from './jwt.util.js';
+import nodeMailer from './nodeMailer.util.js'
+
 export {
     database,
-    generateJwtToken
+    jwt,
+    nodeMailer
 };

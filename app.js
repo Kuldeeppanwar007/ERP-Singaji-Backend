@@ -10,8 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 // Import Routers
-import { organizationRouter } from "./routes/index.js";
+import { userRouter, organizationRouter } from "./routes/index.js";
 // START: Routes
+app.use('/api/user', userRouter);
 app.use('/api/organization', organizationRouter);
 // END: Routes
 

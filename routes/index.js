@@ -1,6 +1,6 @@
 // Import Routers
+import userRouter from './user.router.js';
 import organizationRouter from './organization.router.js'
-import userRouter from './users.js';
 
 // Export Routers
 export {
