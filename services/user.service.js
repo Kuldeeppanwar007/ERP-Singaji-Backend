@@ -1,19 +1,20 @@
-// Import Packeges
-import bcrypt from 'bcrypt';
 // Import Models
 import { userModel } from "../models/index.js";
 
 // Import Utilities
-import {logger} from "../utils/index.js";
+import { logger, crypto } from "../utils/index.js";
 
 // Function: Register User
 async function registerUser(payload) {
     try {
         console.log(payload);
         // Hash Password
-        payload.password = await bcrypt.hash(payload.password, 10);
+        payload.password = crypto.generateHash(payload.password);
 
+        // Create New User
         const user = new userModel(payload);
+
+        // Save in Database
         await user.save();
 
         logger.info(`Email: ${payload.email} | Name: ${payload.name}`);

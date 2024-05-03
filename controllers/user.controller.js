@@ -2,11 +2,12 @@
 import { responseMessages } from '../config/index.js'
 
 // Import Utilities
-import { jwt, logger } from '../utils/index.js';
+import { jwt, logger, crypto } from '../utils/index.js';
 
 // Import Services
 import { userService } from '../services/index.js'
 
+//
 
 // UserController
 const userController = {
@@ -20,7 +21,6 @@ const userController = {
                     message: responseMessages.EMAIL_EXISTS,
                 });
             }
-
             // Save User
             const user = await userService.registerUser(requestData);
             logger.info(`User Found Successfully ! ${user}`)
@@ -51,7 +51,10 @@ const userController = {
                 });
             }
 
+
             // Validate Hash
+            const isHashValid = crypto.validateHash(userCredential.password, user.password.hash, user.password.salt);
+
             if (!isHashValid) {
                 logger.error("Incorrect Password");
                 return res.status(400).json({

@@ -14,6 +14,6 @@ router.post('/register', userController.registerUser)
 router.post('/login', userController.loginUser)
 
 // ROUTES : AllUsers
-router.post('/getUsers', userController.getUsers)
+router.get('/getUsers', userController.getUsers)
 
 export default router;
