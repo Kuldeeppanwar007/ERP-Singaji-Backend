@@ -9,10 +9,8 @@ function mongooseConnection() {
   // Set strictQuery to true to enable strict mode
   mongoose.set("strictQuery", true);
 
-  // Connect to MongoDB using the MONGODB_URI environment variable
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-  })
+  // Connect to MongoDB using the MONGODB_URL environment variable
+  mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
       console.log("Connected to Database");
     })
