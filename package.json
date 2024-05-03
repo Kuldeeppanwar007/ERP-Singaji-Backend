@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon index.js"
   },
   "author": "ERP's Backend Developers",
   "license": "ISC",

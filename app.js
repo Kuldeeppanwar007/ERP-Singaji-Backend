@@ -12,7 +12,7 @@ app.use(express.json());
 // Import Routers
 import { userRouter, organizationRouter } from "./routes/index.js";
 // START: Routes
-app.use('/api/users', userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/organization', organizationRouter);
 // END: Routes
 
