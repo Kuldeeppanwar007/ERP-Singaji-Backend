@@ -2,7 +2,7 @@
 import { responseMessages } from '../config/index.js'
 
 // Import Utilities
-import { jwt } from '../utils/index.js';
+import { jwt, logger } from '../utils/index.js';
 
 // Import Services
 import { userService } from '../services/index.js'
@@ -14,7 +14,7 @@ const userController = {
         try {
             const requestData = req.body;
             if (await userService.checkEmailExists(requestData.email)) {
-                console.log("Email Already Exists");
+                logger.info("Email Already Exists");
                 return res.status(200).json({
                     hasError: true,
                     message: responseMessages.EMAIL_EXISTS,
@@ -23,12 +23,13 @@ const userController = {
 
             // Save User
             const user = await userService.registerUser(requestData);
+            logger.info(`User Found Successfully ! ${user}`)
             return res.status(200).json({
                 hasError: false,
                 data: user,
             });
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,
@@ -43,7 +44,7 @@ const userController = {
             const user = await userService.getUserByEmail(userCredential.email);
 
             if (!user) {
-                console.log("User Not Found!");
+                logger.info("User Not Found!");
                 return res.status(200).json({
                     hasError: true,
                     message: responseMessages.USER_NOT_FOUND,
@@ -52,7 +53,7 @@ const userController = {
 
             // Validate Hash
             if (!isHashValid) {
-                console.log("Incorrect Password");
+                logger.error("Incorrect Password");
                 return res.status(400).json({
                     hasError: true,
                     message: responseMessages.INCORRECT_PASSWORD,
@@ -61,14 +62,14 @@ const userController = {
 
             // Generate JWT Token
             const jwtToken = jwt.generateJwtToken({ email: userCredential.email });
-            console.log("User Logged In");
+            logger.info("User Logged In");
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
                 data: { token: jwtToken, user: user },
             });
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,
@@ -85,13 +86,14 @@ const userController = {
                 message: responseMessages.USER_NOT_FOUND,
                 data: {}
             });
+            logger.info('All User Retrived Successfully');
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
                 data: allUser
             });
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,

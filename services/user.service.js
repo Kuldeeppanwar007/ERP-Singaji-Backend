@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { userModel } from "../models/index.js";
 
 // Import Utilities
-import logger from "./logger.util.js";
+import {logger} from "../utils/index.js";
 
 // Function: Register User
 async function registerUser(payload) {
@@ -26,7 +26,6 @@ async function registerUser(payload) {
 
 // Function: Login User
 async function getUserByEmail(email) {
-
     try {
         const user = await userModel.findOne({ email });
         logger.info('User Found Successfully !')
