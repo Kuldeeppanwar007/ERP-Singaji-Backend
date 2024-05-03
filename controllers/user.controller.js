@@ -1,30 +1,36 @@
-// Import Configerations
-import { responseMessages } from '../config/index.js'
-
-// Import Utilities
-import { jwt, logger, crypto } from '../utils/index.js';
-
-// Import Services
-import { userService } from '../services/index.js'
-
-//
+// Import configurations, utilities, and services
+import { responseMessages } from '../config/index.js';
+import { jwt, logger, crypto,nodeMailer } from '../utils/index.js';
+import { userService } from '../services/index.js';
 
 // UserController
 const userController = {
+    // Register User
     registerUser: async (req, res) => {
         try {
             const requestData = req.body;
+            // Check if email already exists
             if (await userService.checkEmailExists(requestData.email)) {
                 logger.info("Email Already Exists");
-                return res.status(200).json({
+                return res.status(409).json({
                     hasError: true,
                     message: responseMessages.EMAIL_EXISTS,
                 });
             }
             // Save User
             const user = await userService.registerUser(requestData);
-            logger.info(`User Found Successfully ! ${user}`)
-            return res.status(200).json({
+            logger.info(`User Registered Successfully! ${user}`);
+
+            // Send Welcome Email
+            await nodeMailer.sendMail({
+                from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
+                to: user.email,
+                subject: `Welcome to Our Community, ${user.name}! 🎉`,
+                text: `Hi ${user.name},\n\nWelcome to our community! We're thrilled to have you on board. Get ready to explore, connect, and enjoy. If you have any questions or need assistance, feel free to reach out.\n\nCheers,\nThe Team`,
+                // html: 'HTML version of the message'
+            });
+
+            return res.status(201).json({
                 hasError: false,
                 data: user,
             });
@@ -37,39 +43,47 @@ const userController = {
         }
     },
 
-    // Controller: Login User
+    // Login User
     loginUser: async (req, res) => {
         try {
-            const userCredential = req.body;
-            const user = await userService.getUserByEmail(userCredential.email);
+            const { email, password } = req.body;
+            const user = await userService.getUserByEmail(email);
 
             if (!user) {
                 logger.info("User Not Found!");
-                return res.status(200).json({
+                return res.status(404).json({
                     hasError: true,
                     message: responseMessages.USER_NOT_FOUND,
                 });
             }
 
-
             // Validate Hash
-            const isHashValid = crypto.validateHash(userCredential.password, user.password.hash, user.password.salt);
-
+            const isHashValid = crypto.validateHash(password, user.password.hash, user.password.salt);
             if (!isHashValid) {
                 logger.error("Incorrect Password");
-                return res.status(400).json({
+                return res.status(401).json({
                     hasError: true,
                     message: responseMessages.INCORRECT_PASSWORD,
                 });
             }
 
             // Generate JWT Token
-            const jwtToken = jwt.generateJwtToken({ email: userCredential.email });
+            const jwtToken = jwt.generateJwtToken({ email });
             logger.info("User Logged In");
+
+            // Send Welcome Back Email
+            nodeMailer.sendMail({
+                from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
+                to: user.email,
+                subject: `Welcome Back, ${user.name}!`,
+                text: `Hi ${user.name},\n\nWe're glad to see you back! If you need any assistance or have any questions, feel free to reach out to us.\n\nBest,\nThe Team`,
+                // html: '<p>HTML version of the message</p>'
+            });
+
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
-                data: { token: jwtToken, user: user },
+                data: { token: jwtToken, user },
             });
         } catch (err) {
             logger.error(err);
@@ -80,32 +94,30 @@ const userController = {
         }
     },
 
-    // Create a function to get all the users
+    // Get All Users
     getUsers: async (req, res) => {
         try {
-            const allUser = userService.getAllUsers();
-            if (!allUser) return res.status(400).json({
-                hasError: false,
-                message: responseMessages.USER_NOT_FOUND,
-                data: {}
-            });
-            logger.info('All User Retrived Successfully');
+            const allUsers = await userService.getAllUsers();
+            if (!allUsers || allUsers.length === 0) {
+                return res.status(404).json({
+                    hasError: true,
+                    message: responseMessages.USER_NOT_FOUND,
+                });
+            }
+            logger.info('All Users Retrieved Successfully');
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
-                data: allUser
+                data: allUsers,
             });
         } catch (err) {
             logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,
-                data: {}
             });
         }
-
     }
-}
-
+};
 
 export default userController;

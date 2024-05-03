@@ -20,22 +20,22 @@ let transporter = nodemailer.createTransport({
 });
 
 // Configure the email options
-const emailOptions = {
-  from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`, // Sender address
-  to: null, // List of receivers
-  subject: null, // Subject line
-  text: null, // Plain text body
-};
+// const emailOptions = {
+//   from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`, // Sender address
+//   to: null, // List of receivers
+//   subject: null, // Subject line
+//   text: null, // Plain text body
+//   html:null
+// };
 
 // Example function to send an email
 const sendMail = async (emailOptions) => {
   try {
-    let info = await transporter.sendMail(emailOptions);
-
-    logger.info(`Message sent: %s, ${info.messageId}`);
+    await transporter.sendMail(emailOptions);
+    logger.info(`Email successfully sent to ${emailOptions.to}`);
     return true;
   } catch (error) {
-    logger.error(`Error sending email:  ${error}`);
+    logger.error(`Error sending email: ${error}`);
     return false;
   }
 };
