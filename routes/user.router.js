@@ -8,12 +8,12 @@ import { userController } from '../controllers/index.js'
 const router = express.Router();
 
 // ROUTES : RegisterUser
-router.post('/register', userController.registerUser)
+router.post('/register', userController.registerUser);
 
 // ROUTES : LoginUser
-router.post('/login', userController.loginUser)
+router.post('/login', userController.loginUser);
 
 // ROUTES : AllUsers
-router.get('/getUsers', userController.getUsers)
+router.get('/getUsers', userController.getUsers);
 
 export default router;

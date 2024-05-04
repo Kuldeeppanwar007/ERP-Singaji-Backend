@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     password: { salt: String, hash: String },
     role: {
         type: String,
-        enum: ['student', 'faculty', 'admin'],
+        enum: ['STUDENT', 'FACULTY', 'SUPERADMIN','ADMIN'],
         required: true
     }
 }, { timestamps: true });

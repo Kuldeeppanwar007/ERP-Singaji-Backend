@@ -1,7 +1,7 @@
 // Import Services, Configerations
-import { organizationService } from '../services/index.js'
-import { responseMessages } from '../config/index.js';
-import { logger } from '../utils/index.js';
+import { organizationService } from '../../services/index.js'
+import { responseMessages } from '../../config/index.js';
+import { logger } from '../../utils/index.js';
 
 // Define a controllers
 const organizationController = {

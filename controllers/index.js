@@ -1,6 +1,6 @@
 // Import Controllers
-import organizationController from "./organization.controller.js";
-import userController from './user.controller.js'
+import organizationController from "./organization.controller/organization.controller.js";
+import userController from './users.controllers/user.controller.js'
 // Export Controllers
 export {
     userController,

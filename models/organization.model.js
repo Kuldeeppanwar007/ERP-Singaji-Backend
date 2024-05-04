@@ -14,6 +14,15 @@ const organizationSchema = new mongoose.Schema({
     organizationVision: { type: String },
     socialMediaProfiles: [{ type: String }],
     organizationLogo: { type: String },
+    status: {
+        type: String,
+        enum: ['PENDING', 'APPROVED', 'REJECT'],
+        default: 'PENDING',
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
 });
 
 // Create a Mongoose model from the schema
