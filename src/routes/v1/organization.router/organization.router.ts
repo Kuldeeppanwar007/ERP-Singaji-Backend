@@ -1,5 +1,5 @@
 // Import packages
-import { organizationController } from '@controller/v1/index';
+import { organizationController } from '../../../controllers/v1/index';
 import express from 'express';
 
 
