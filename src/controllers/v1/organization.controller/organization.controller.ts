@@ -1,6 +1,6 @@
 // Import Services, Configerations
-import { checkIfEmailExists,registerOrganization } from '../../../services/v1/index'
-import { responseMessages } from '../../../config/index';
+import { checkIfEmailExists,registerOrganization } from '@service/v1/index'
+import { responseMessages } from '@config/index';
 // import { logger } from '../utils/index.js';
 import { Request, Response } from 'express';
 

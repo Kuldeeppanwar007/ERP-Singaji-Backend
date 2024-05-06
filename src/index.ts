@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // Import utilities
-import { mongooseConnection } from "./src/utils/index";
+import { mongooseConnection } from "../src/utils/index";
 
 const app = express()
 
@@ -15,10 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 // Import Routers
-import { organizationRouter } from './src/routes/v1/index';
+import { organizationRouter,userRouter } from '@routes/v1/index';
 
 // START: Routes
-// app.use('/api/user', userRouter);
+app.use('/api/user', userRouter);
 app.use('/api/organization', organizationRouter);
 
 // // Initialize database connection

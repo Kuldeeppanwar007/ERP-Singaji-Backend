@@ -1,7 +1,7 @@
 // Import Models
-import { userModel } from "../../../models/v1/index";
+import { userModel } from "@models/v1/index";
 
-import { generateHash } from "../../../utils/index";
+import { generateHash } from "@utils/index";
 
 // Function: Register User
 export async function registerUser(payload:any) {
