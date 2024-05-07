@@ -1,5 +1,5 @@
-import express from "express";
-import cors from "cors";
+import express from 'express';
+// import cors from "cors";
 import dotenv from "dotenv";
 // import { logger } from "./utils/index.js";
 import { userRouter, organizationRouter } from "./routes/v1/index.js";
@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 // Enable CORS
-app.use(cors);
+// app.use(cors);
 
 // Enable JSON parsing
 app.use(express.json());
@@ -21,13 +21,17 @@ app.use(express.json());
 // Connect to the database
 connectCentralDB();
 
-// Connect to the organization model
+// // Connect to the organization model
 app.use("/api/organization", organizationRouter);
 
-// Connect to the user model
+// // Connect to the user model
 app.use("/api/user", userRouter);
 
-app.listen(port, () => {
-    console.log(`🚀 App Started: http://localhost:${port}`);
+// Default Route Configuration
+app.get("/", (req, res) => {
+  res.send("Hello World");
 });
 
+app.listen(port, () => {
+  console.log(`🚀 App Started: http://localhost:${port}`);
+});

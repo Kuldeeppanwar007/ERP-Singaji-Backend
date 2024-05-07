@@ -1,10 +1,10 @@
 import userModel from "../../../models/v1/user.model/user.model.js";
 import { findOrganization, connectOrganizationDB } from "../../../utils/db.js";
 
-const registerUser = async (userData: any) => {
+const register = async (userData: any) => {
   try {
     // Get the organization from the user data
-    const organization = await findOrganization("rajputnik911@gmail.com");
+    const organization = await findOrganization("rajputnik6348@gmail.com");
 
     console.log("Organization:", organization);
 
@@ -37,4 +37,4 @@ const registerUser = async (userData: any) => {
   }
 };
 
-export default { registerUser };
+export default { register };

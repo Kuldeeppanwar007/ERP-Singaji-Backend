@@ -27,7 +27,7 @@ const registerOrganization = async (organizationData: OrganizationData) => {
             acronym += words[i].charAt(0);
         }
         // create organization database
-        const organizationURL = `${process.env.MONGODB_URL}_${acronym}}`
+        const organizationURL = `${process.env.MONGODB_URL}_${acronym}`
 
         // Create a new organization object
         const newOrganization = new OrganizationModel({
