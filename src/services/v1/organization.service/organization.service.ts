@@ -1,44 +1,57 @@
-// Import the organization model
-import { organization } from "../../../models/v1/index.js";
-// Import Utilities
-// import {logger} from "../../../utils/index.js";
-// Define a function for creating an organization
-const registerOrganization = async (organizationData: { [key: string]: any }): Promise<any> => {
+import OrganizationModel from "../../../models/v1/organization.model/organization.model.js";
+import dotenv from "dotenv";
+dotenv.config();
+
+dotenv.config();
+
+interface OrganizationData {
+    name: string;
+    type: string;
+    email: string;
+    address: string;
+    website: string;
+    phone: string;
+    affiliations: string[];
+    registrationInfo: string;
+    vision: string;
+    socialMediaProfiles: string[];
+    logo: string;
+}
+
+const registerOrganization = async (organizationData: OrganizationData) => {
     try {
-        // Create a new organization instance
-        const newOrganization = new organization(organizationData);
+        // Get the first character of each word in the organization's name
+        const words = organizationData.name.split(" ");
+        let acronym = "";
+        for (let i = 0; i < words.length; i++) {
+            acronym += words[i].charAt(0);
+        }
+        // create organization database
+        const organizationURL = `${process.env.MONGODB_URL}_${acronym}}`
+
+        // Create a new organization object
+        const newOrganization = new OrganizationModel({
+            name: organizationData.name,
+            type: organizationData.type,
+            email: organizationData.email,
+            address: organizationData.address,
+            website: organizationData.website,
+            phone: organizationData.phone,
+            affiliations: organizationData.affiliations,
+            registrationInfo: organizationData.registrationInfo,
+            vision: organizationData.vision,
+            socialMediaProfiles: organizationData.socialMediaProfiles,
+            logo: organizationData.logo,
+            dbURL: organizationURL,
+        });
 
         // Save the organization to the database
-        const savedOrganization = await newOrganization.save();
-
-        // Return the saved organization
-        return savedOrganization;
+        await newOrganization.save();
+        console.log('Organization registered successfully!');
+        return newOrganization;
     } catch (error) {
-        console.log(error);
-        return false;
+        console.error('Error registering organization:', error);
     }
 };
 
-// Define a function for checking if an email exists
-const checkIfEmailExists = async (email: string): Promise<boolean> => {
-    try {
-        // Find an organization with the given email address
-        const organizationFound = await organization.findOne({ organizationEmail: email });
-
-        // If an organization was found, return true
-        if (organizationFound) {
-            // Assuming tenantConnection is a function that needs to be imported or defined
-            // tenantConnection(organizationFound.name);
-            return true;
-        }
-
-        // If no organization was found, return false
-        return false;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
-// Export the registerOrganization and checkIfEmailExists functions
-export default { registerOrganization, checkIfEmailExists };
+export default { registerOrganization }

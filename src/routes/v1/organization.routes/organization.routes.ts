@@ -1,18 +1,10 @@
-// Import packages
+import  organizationController  from '../../../controllers/v1/organization.controller/organization.controller.js'
 import express from 'express';
-
-// Import Controllers
-import { organizationController } from '../../../controllers/v1/index.js'
 
 // Create Router
 const router = express.Router();
 
 // ROUTES : Register
-router.post('/register', organizationController.registerOrganization);
-
-router.get('/', (req, res) => {
-    console.log("Entered");
-    res.send('Connected To Server');
-});
+router.post('/register',organizationController.registerOrganization);
 
 export default router;

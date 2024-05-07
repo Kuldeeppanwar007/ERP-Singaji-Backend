@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 // import { logger } from "./utils/index.js";
 import { userRouter, organizationRouter } from "./routes/v1/index.js";
-import mongooseConnection from "./utils/database.util.js";
+import { connectCentralDB } from "./utils/db.js";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ app.use(cors);
 app.use(express.json());
 
 // Connect to the database
-mongooseConnection();
+connectCentralDB();
 
 // Connect to the organization model
 app.use("/api/organization", organizationRouter);
@@ -28,6 +28,6 @@ app.use("/api/organization", organizationRouter);
 app.use("/api/user", userRouter);
 
 app.listen(port, () => {
-    console.log(`🚀 App Started: http://localhost:`);
+    console.log(`🚀 App Started: http://localhost:${port}`);
 });
 

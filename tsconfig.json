@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2019", // Set the JavaScript version for output files
-    "module": "ES6", // Use commonjs module system, suitable for Node.js
-    "outDir": "./dist", // Redirect output structure to the directory
-    "rootDir": "./src", // Specify the root directory of input files
-    "strict": true, // Enable all strict type-checking options
-    "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
-    "skipLibCheck": true, // Skip type checking of all declaration files (*.d.ts)
-    "forceConsistentCasingInFileNames": true // Disallow inconsistently-cased references to the same file
+    "target": "es2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "src"
   },
-  "include": ["src/**/*", "src/index.ts"], // Include all files in the src directory
-  "exclude": ["node_modules", "dist"] // Exclude node_modules directory and dist directory from the source files
+  "include": ["src1/**/*", "src/utils/index.ts", "src/controllers/v1/organization.controller/organization.controller.ts", "src/controllers/v1/user.controller/user.controller.ts", "src/models/v1/organization.model/organization.model.ts", "src/models/v1/user.model/user.model.ts", "src/routes/v1/organization.routes/organization.routes.ts", "src/routes/v1/user.routes/user.routes.ts", "src/services/v1/organization.service/organization.service.ts", "src/services/v1/user.service/user.service.ts", "src/utils/db.ts"],
+  "exclude": ["node_modules", "dist"]
 }
