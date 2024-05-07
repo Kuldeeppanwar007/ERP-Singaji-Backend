@@ -1,5 +1,5 @@
 // Import the organization model
-import { organization } from "../../../models/v1/index";
+import { organization } from "@models/v1/index";
 
 // Import Utilities
 // import { logger } from "../utils/index.js";

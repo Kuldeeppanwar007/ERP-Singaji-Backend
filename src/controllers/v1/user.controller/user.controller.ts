@@ -1,7 +1,7 @@
 // Import configurations, utilities, and services
-import { responseMessages } from '../../../config/index';
-import {  generateJwtToken} from '../../../utils/index';
-import { checkEmailExists, registerUser,getUserByEmail ,getAllUsers} from '../../../services/v1/index';
+import { responseMessages } from '@config/index';
+import {  generateJwtToken} from '@utils/index';
+import { checkEmailExists, registerUser,getUserByEmail ,getAllUsers} from '@service/v1/index';
 import { Request, Response } from 'express'
 
 // UserController

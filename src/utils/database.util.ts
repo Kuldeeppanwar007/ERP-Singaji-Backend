@@ -7,7 +7,7 @@ dotenv.config();
 
 
 // Define a function to connect to MongoDB using mongoose
-export function mongooseConnection() {
+export const mongooseConnection = ()=> {
   // Set strictQuery to true to enable strict mode
   mongoose.set("strictQuery", true);
 

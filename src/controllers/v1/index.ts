@@ -1,3 +1,8 @@
 // Import Controllers
-export * from './organization.controller/organization.controller'
-export *  from './user.controller/user.controller'
+import { organizationController } from './organization.controller/organization.controller'
+import { userController } from './user.controller/user.controller'
+
+export {
+    userController,
+    organizationController
+}

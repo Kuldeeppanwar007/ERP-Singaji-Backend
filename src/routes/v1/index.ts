@@ -1,4 +1,9 @@
 
+import { organizationRouter } from './organization.router/organization.router'
+import { userRouter } from './user.router/user.router'
 
-export * from './organization.router/organization.router' 
-export * from './user.router/user.router'
+
+export{
+    userRouter,
+    organizationRouter
+}
