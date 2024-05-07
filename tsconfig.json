@@ -10,6 +10,6 @@
     "outDir": "./dist",
     "rootDir": "src"
   },
-  "include": ["src1/**/*", "src/utils/index.ts", "src/controllers/v1/organization.controller/organization.controller.ts", "src/controllers/v1/user.controller/user.controller.ts", "src/models/v1/organization.model/organization.model.ts", "src/models/v1/user.model/user.model.ts", "src/routes/v1/organization.routes/organization.routes.ts", "src/routes/v1/user.routes/user.routes.ts", "src/services/v1/organization.service/organization.service.ts", "src/services/v1/user.service/user.service.ts", "src/utils/db.ts"],
+  "include": ["src/*"],
   "exclude": ["node_modules", "dist"]
 }
