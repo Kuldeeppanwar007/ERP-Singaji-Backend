@@ -25,8 +25,6 @@ app.use('/api/organization', organizationRouter);
 mongooseConnection();
 
 
-
-
 // Define Port
 const port = 3000;
 
