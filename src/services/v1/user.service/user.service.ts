@@ -1,17 +1,18 @@
 // Import Models
-import { userModel } from "@models/v1/index";
+import { User } from "@models/v1/index";
 
 import { generateHash } from "@utils/index";
+import { UserCreateInput } from "dto/user.dto";
 
 // Function: Register User
-export async function registerUser(payload:any) {
+export async function registerUser(payload: any) {
     try {
         console.log(payload);
         // Hash Password
         payload.password = generateHash(payload.password);
 
         // Create New User
-        const user = new userModel(payload);
+        const user = new User(payload);
 
         // Save in Database
         await user.save();
@@ -27,7 +28,7 @@ export async function registerUser(payload:any) {
 // Function: Login User
 export async function getUserByEmail(email:string) {
     try {
-        const user = await userModel.findOne({ email });
+        const user = await User.findOne({ email });
         // logger.info('User Found Successfully !')
         return user;
     } catch (err) {
@@ -40,7 +41,7 @@ export async function getUserByEmail(email:string) {
 export async function checkEmailExists(email:string) {
     try {
         let emailExists = false;
-        const user = await userModel.findOne({ email });
+        const user = await User.findOne({ email });
         if (user) emailExists = true;
         // logger.info('Email Found Successfully !')
         return emailExists;
@@ -51,7 +52,7 @@ export async function checkEmailExists(email:string) {
 }
 export async function getAllUsers() {
     try {
-        const users = await userModel.find();
+        const users = await User.find();
         return users;
     } catch (err) {
         console.log(err);

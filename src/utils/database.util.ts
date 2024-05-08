@@ -12,7 +12,7 @@ export const mongooseConnection = ()=> {
   mongoose.set("strictQuery", true);
 
   // Connect to MongoDB using the MONGODB_URL environment variable
-  mongoose.connect("mongodb+srv://Singaji_ERP:RHSoAziA0OXXk4yX@singaji-erp.kaqst8c.mongodb.net/Singa_Ji_Erp")
+  mongoose.connect(process.env.MONGODB_URI || '')
     .then(() => {
       console.log("Connected")
       // logger.info("Connected to Database");

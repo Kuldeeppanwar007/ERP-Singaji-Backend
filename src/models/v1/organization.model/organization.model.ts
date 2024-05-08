@@ -8,12 +8,16 @@ const organizationSchema = new mongoose.Schema({
     organizationEmail: { type: String, required: true, unique: true },
     organizationAddress: { type: String, required: true },
     organizationWebsite: { type: String, required: true },
-    organizationPhone: { type: String, required: true },
+    organizationPhone: { type: Number, required: true },
     affiliations: { type: String },
     organizationRegistrationInfo: { type: String, required: true },
     organizationVision: { type: String },
     socialMediaProfiles: [{ type: String }],
     organizationLogo: { type: String },
+    isVerified : {type:Boolean},
+    isActive: {type: Boolean},
+    isDeleted:{type: Boolean},
+    status: {type: String}
 });
 
 // Create a Mongoose model from the schema

@@ -1,8 +1,9 @@
 // Import configurations, utilities, and services
 import { responseMessages } from '@config/index';
-import {  generateJwtToken} from '@utils/index';
+import {  generateJwtToken, validateHash, logger} from '@utils/index';
 import { checkEmailExists, registerUser,getUserByEmail ,getAllUsers} from '@service/v1/index';
 import { Request, Response } from 'express'
+import { UserCreateInput } from 'dto/user.dto';
 
 // UserController
 export const userController = {
@@ -44,55 +45,55 @@ export const userController = {
         }
     },
 
-    // Login User
+    // // Login User
     loginUser: async (req:Request, res:Response) => {
-        try {
-            const { email, password } = req.body;
-            const user = await getUserByEmail(email);
+        // try {
+        //     const { email, password } = req.body;
+        //     const user= await getUserByEmail(email);
+ 
+        //     if (!user) {
+        //         // logger.info("User Not Found!");
+        //         return res.status(404).json({
+        //             hasError: true,
+        //             message: responseMessages.USER_NOT_FOUND,
+        //         });
+        //     }
 
-            if (!user) {
-                // logger.info("User Not Found!");
-                return res.status(404).json({
-                    hasError: true,
-                    message: responseMessages.USER_NOT_FOUND,
-                });
-            }
+        //     // Validate Hash
+        //     const isHashValid = validateHash(password, user.password.hash, user.password.salt);
+        //     if (!isHashValid) {
+        //         // logger.error("Incorrect Password");
+        //         return res.status(401).json({
+        //             hasError: true,
+        //             message: responseMessages.INCORRECT_PASSWORD,
+        //         });
+        //     }
 
-            // Validate Hash
-            // const isHashValid = validateHash(password, user.password.hash, user.password.salt);
-            // if (!isHashValid) {
-            //     // logger.error("Incorrect Password");
-            //     return res.status(401).json({
-            //         hasError: true,
-            //         message: responseMessages.INCORRECT_PASSWORD,
-            //     });
-            // }
+        //     // Generate JWT Token
+        //     const jwtToken = generateJwtToken({ email });
+        //     // logger.info("User Logged In");
 
-            // Generate JWT Token
-            const jwtToken = generateJwtToken({ email });
-            // logger.info("User Logged In");
+        //     // Send Welcome Back Email
+        //     // nodeMailer.sendMail({
+        //     //     from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
+        //     //     to: user.email,
+        //     //     subject: `Welcome Back, ${user.name}!`,
+        //     //     text: `Hi ${user.name},\n\nWe're glad to see you back! If you need any assistance or have any questions, feel free to reach out to us.\n\nBest,\nThe Team`,
+        //     //     // html: '<p>HTML version of the message</p>'
+        //     // });
 
-            // Send Welcome Back Email
-            // nodeMailer.sendMail({
-            //     from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
-            //     to: user.email,
-            //     subject: `Welcome Back, ${user.name}!`,
-            //     text: `Hi ${user.name},\n\nWe're glad to see you back! If you need any assistance or have any questions, feel free to reach out to us.\n\nBest,\nThe Team`,
-            //     // html: '<p>HTML version of the message</p>'
-            // });
-
-            return res.status(200).json({
-                hasError: false,
-                message: responseMessages.USER_FOUND,
-                data: { token: jwtToken, user },
-            });
-        } catch (err) {
-            // logger.error(err);
-            return res.status(500).json({
-                hasError: true,
-                message: responseMessages.INTERNAL_SERVER_ERROR,
-            });
-        }
+        //     return res.status(200).json({
+        //         hasError: false,
+        //         message: responseMessages.USER_FOUND,
+        //         data: { token: jwtToken, user },
+        //     });
+        // } catch (err) {
+        //     // logger.error(err);
+        //     return res.status(500).json({
+        //         hasError: true,
+        //         message: responseMessages.INTERNAL_SERVER_ERROR,
+        //     });
+        // }
     },
 
     // Get All Users
@@ -105,14 +106,14 @@ export const userController = {
                     message: responseMessages.USER_NOT_FOUND,
                 });
             }
-            // logger.info('All Users Retrieved Successfully');
+             logger.info('All Users Retrieved Successfully');
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
                 data: allUsers,
             });
         } catch (err) {
-            // logger.error(err);
+            logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,

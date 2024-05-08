@@ -8,7 +8,6 @@ import { Request, Response } from 'express';
 export const organizationController = {
     // Define a function for creating an organization
     registerOrganization: async (req:Request, res:Response) => {
-        // console.log("entered");
         try {
             // Get the organization data from the request body
             const organizationData = req.body;

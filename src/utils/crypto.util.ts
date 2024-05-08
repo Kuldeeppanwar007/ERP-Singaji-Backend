@@ -16,7 +16,7 @@ import crypto from "crypto";
     }
 }
 // Function: Validate Hash
-export function validateHash(text:any, hash:any, salt:any) {
+export function validateHash(text:string, hash:string, salt:string ) {
     try {
         const { hash: generatedHash } = generateHash(text, salt);
         const isHashValid = generatedHash === hash;

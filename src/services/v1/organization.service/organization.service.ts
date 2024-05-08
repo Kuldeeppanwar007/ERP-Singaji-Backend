@@ -1,11 +1,12 @@
 // Import the organization model
 import { organization } from "@models/v1/index";
+import { Organization } from "dto/organization.dto";
 
 // Import Utilities
 // import { logger } from "../utils/index.js";
 
 // Define a function for creating an organization
-export const registerOrganization = async (organizationData:any) => {
+export const registerOrganization = async (organizationData:Organization) => {
     try {
 
         // Create a new organization instance
@@ -23,7 +24,7 @@ export const registerOrganization = async (organizationData:any) => {
 };
 
 // Define a function for checking if an email exists
-export const checkIfEmailExists = async (email:any) => {
+export const checkIfEmailExists = async (email:string) => {
     try {
         // Find an organization with the given email address
         const newOrganization = await organization.findOne({ organizationEmail: email });

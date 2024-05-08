@@ -1,7 +1,7 @@
 // Import Dependencies
 import jwt, { Secret } from "jsonwebtoken";
 // import { logger } from "../utils/index.js";
-import userService from "../services/user.service.js";
+// import userService from "@services/user.service.js";
 import {Request,Response,NextFunction} from 'express'
 
 // Middleware: Verify Token
