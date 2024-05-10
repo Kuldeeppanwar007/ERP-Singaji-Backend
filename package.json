@@ -2,7 +2,7 @@
   "name": "erp_modules",
   "version": "1.0.0",
   "description": "A ERP_MODULES Api",
-  "main": "src/index.ts",
+  "main": "index.js",
   "scripts": {
     "start": "node index.ts",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node-dev -r tsconfig-paths/register src/index.ts"
