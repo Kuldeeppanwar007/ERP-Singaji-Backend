@@ -13,7 +13,7 @@ export const userController = {
             const requestData = req.body;
             // Check if email already exists
             if (await checkEmailExists(requestData.email)) {
-                // logger.info("Email Already Exists");
+                 logger.info("Email Already Exists");
                 return res.status(409).json({
                     hasError: true,
                     message: responseMessages.EMAIL_EXISTS,
@@ -21,7 +21,7 @@ export const userController = {
             }
             // Save User
             const user = await registerUser(requestData);
-            // logger.info(`User Registered Successfully! ${user}`);
+            logger.info(`User Registered Successfully! ${user}`);
 
             // Send Welcome Email
             // await sendMail({
@@ -37,7 +37,7 @@ export const userController = {
                 data: user,
             });
         } catch (err) {
-            // logger.error(err);
+             logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,

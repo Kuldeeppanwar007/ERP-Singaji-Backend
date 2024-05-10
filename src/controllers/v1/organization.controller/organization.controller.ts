@@ -1,7 +1,7 @@
 // Import Services, Configerations
 import { checkIfEmailExists,registerOrganization } from '@service/v1/index'
 import { responseMessages } from '@config/index';
-// import { logger } from '../utils/index.js';
+import { logger } from '@utils/index';
 import { Request, Response } from 'express';
 
 // Define a controllers
@@ -22,13 +22,13 @@ export const organizationController = {
             const newOrganization = await registerOrganization(organizationData);
 
             console.log(newOrganization);
-            // logger.info('New Organization Created Successfully !');
+            logger.info('New Organization Created Successfully !');
             // Send a response with the new organization
             res.status(201).json({ hasError: false, message: responseMessages.ORGANIZATION_CREATED_SUCCESSFULLY, data: newOrganization })
 
         } catch (error) {
             // If an error occurred, send a response with the error message
-            // logger.error(error);
+             logger.error(error);
             res.status(400).json({ message: responseMessages.INTERNAL_SERVER_ERROR });
         }
     },

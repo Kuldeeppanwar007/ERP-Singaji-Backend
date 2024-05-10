@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 // Import Utilities
-// import logger from './logger.util.js';
+import {logger} from './logger.util';
 
 // Load environment variables
 dotenv.config();
@@ -32,10 +32,10 @@ let transporter = nodemailer.createTransport({
 export const sendMail = async (emailOptions:any) => {
   try {
     await transporter.sendMail(emailOptions);
-    // logger.info(`Email successfully sent to ${emailOptions.to}`);
+    logger.info(`Email successfully sent to ${emailOptions.to}`);
     return true;
   } catch (error) {
-    // logger.error(`Error sending email: ${error}`);
+     logger.error(`Error sending email: ${error}`);
     return false;
   }
 };

@@ -3,7 +3,7 @@ import { organization } from "@models/v1/index";
 import { Organization } from "dto/organization.dto";
 
 // Import Utilities
-// import { logger } from "../utils/index.js";
+ import { logger } from "@utils/index";
 
 // Define a function for creating an organization
 export const registerOrganization = async (organizationData:Organization) => {
@@ -18,7 +18,7 @@ export const registerOrganization = async (organizationData:Organization) => {
         // Return the saved organization
         return savedOrganization;
     } catch (error) {
-        // logger.error(error)
+        logger.error(error)
         return false;
     }
 };
@@ -37,7 +37,7 @@ export const checkIfEmailExists = async (email:string) => {
         // If no organization was found, return false
         return false;
     } catch (error) {
-        // logger.error(error)
+        logger.error(error)
         return false
     }
 };

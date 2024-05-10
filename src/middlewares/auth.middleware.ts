@@ -1,6 +1,6 @@
 // Import Dependencies
 import jwt, { Secret } from "jsonwebtoken";
-// import { logger } from "../utils/index.js";
+import { logger } from "@utils/index";
 // import userService from "@services/user.service.js";
 import {Request,Response,NextFunction} from 'express'
 
@@ -14,16 +14,16 @@ const verifyToken = async (req:Request, res:Response, next: NextFunction) => {
             // const { user: { email: userEmail }, } = jwt.verify(token, secretKey);
             // const user = await userService.getUserByEmail(userEmail);
             // req.user = user;
-            // logger.info("Authentication Success");
+            logger.info("Authentication Success");
             return next();
         }
-        // logger.error("Authorization Failed");
+         logger.error("Authorization Failed");
         return res.status(403).send({
             hasError: true,
             message: "Authentication Failed!",
         });
     } catch (err) {
-        // logger.error("Authentication Failed!");
+         logger.error("Authentication Failed!");
         return res.status(403).send({
             hasError: true,
             message: "Authentication Failed!",

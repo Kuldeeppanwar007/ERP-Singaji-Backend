@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
-
+import {logger} from '@utils/index'
 // Import Utilities
 
 
@@ -15,11 +15,11 @@ export const mongooseConnection = ()=> {
   mongoose.connect(process.env.MONGODB_URI || '')
     .then(() => {
       console.log("Connected")
-      // logger.info("Connected to Database");
+       logger.info("Connected to Database");
     })
     // If there is an error while connecting, log the error to the console
     .catch((err) => {
-      // logger.error(err);
+      logger.error(err);
     });
 }
 
