@@ -1,7 +1,3 @@
-// Import Middlewares
-import verifyToken from "./auth.middleware";
-
 // Export Middlewares
-export {
-    verifyToken
-}
+export * from "./auth.middleware";
+export * from "./tanentConnection.middleware";
