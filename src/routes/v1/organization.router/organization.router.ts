@@ -3,7 +3,7 @@ import { organizationController } from "@controllers/v1/index";
 import express from "express";
 
 // Middlewares
-import { tanentConnection } from "middlewares";
+import { tanentConnection, uploader } from "middlewares";;
 
 // const connectTanent = tanentConnection;
 
@@ -11,6 +11,6 @@ import { tanentConnection } from "middlewares";
 const router = express.Router();
 
 // ROUTES : Register
-router.post("/register", organizationController.registerOrganization);
+router.post("/register", uploader.single("logo"), organizationController.registerOrganization);
 
 export { router as organizationRouter };
