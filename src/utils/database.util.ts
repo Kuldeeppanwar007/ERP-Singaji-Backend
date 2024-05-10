@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
-
+import {logger} from '@utils/index'
 // Import Utilities
 
 // Define a function to connect to MongoDB using mongoose
