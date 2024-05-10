@@ -34,13 +34,5 @@ const verifyToken = async (req:Request, res:Response, next: NextFunction) => {
       hasError: true,
       message: "Authentication Failed!",
     });
-  } catch (err) {
-    // logger.error("Authentication Failed!");
-    return res.status(403).send({
-      hasError: true,
-      message: "Authentication Failed!",
-    });
-  }
-};
-
+  } 
 export default verifyToken;

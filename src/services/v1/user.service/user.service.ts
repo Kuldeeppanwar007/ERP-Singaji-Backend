@@ -13,7 +13,7 @@ export async function registerUser(payload: any) {
     payload.password = generateHash(payload.password);
 
     // Create New User
-    const user = new userModel(payload);
+    const user = new User(payload);
 
     // Save in Database
     await user.save();
