@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(rateLimitMiddleware)
 
 // Import Routers
-import { organizationRouter, userRouter } from "@routes/v1/index";
+import { addressRoutes, organizationRoutes, userRoutes } from "@routes/v1/index";
 
 // // Initialize database connection
 const url: string = <string>process.env.MONGODB_URI;
@@ -27,8 +27,9 @@ console.log(url);
 mongooseConnection(url + "Singa_Ji_Erp_Master");
 
 // START: Routes
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/organization", organizationRouter);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/organization", organizationRoutes);
+app.use("/api/v1/address", addressRoutes)
 
 // Define Port
 const port = process.env.PORT || 3000;
