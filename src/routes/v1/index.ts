@@ -1,9 +1,10 @@
 
-import { organizationRouter } from './organization.router/organization.router'
-import { userRouter } from './user.router/user.router'
-
+import  organizationRoutes from './organization.routes/organization.routes'
+import  userRoutes  from './user.routes/user.routes'
+import addressRoutes from './address.routes/address.routes'
 
 export{
-    userRouter,
-    organizationRouter
+    userRoutes,
+    organizationRoutes,
+    addressRoutes
 }

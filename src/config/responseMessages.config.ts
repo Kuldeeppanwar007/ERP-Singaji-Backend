@@ -6,6 +6,9 @@ const responseMessages = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   ORGANIZATION_CREATED_SUCCESSFULLY: "Organization created successfully",
   ORGANIZATION_NOTCREATED: "Organization not created",
+  ADDRESS_NOT_FOUND: "Address not found.",
+  ADDRESS_UPDATED: "Address updated successfully.",
+  ADDRESS_DELETED: "Address deleted successfully."
 };
 
 export default responseMessages;

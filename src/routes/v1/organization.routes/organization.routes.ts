@@ -13,4 +13,4 @@ const router = express.Router();
 // ROUTES : Register
 router.post("/register", organizationController.registerOrganization);
 
-export { router as organizationRouter };
+export default router;
