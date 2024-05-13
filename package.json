@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.ts",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "dev": "nodemon --watch 'src/**/*.ts'  --exec ts-node-dev -r tsconfig-paths/register src/index.ts"
   },
   "author": "ERP's Backend Developers",
   "license": "ISC",
@@ -20,10 +20,12 @@
     "mongoose": "^7.0.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
+    "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -32,6 +34,8 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.15",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/yamljs": "^0.2.34",
     "eslint": "^8.50.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "nodemon": "^3.1.0"

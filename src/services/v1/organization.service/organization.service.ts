@@ -1,6 +1,6 @@
 // Import the organization model
 import { organization } from "@models/v1/index";
-import { Organization } from "dto/organization.dto";
+import { Organization } from "@dto/organization.dto";
 
 // Import Utilities
  import { logger } from "@utils/index";
