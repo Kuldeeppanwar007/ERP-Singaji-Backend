@@ -6,12 +6,12 @@ import { Organization } from "@dto/organization.dto";
  import { logger } from "@utils/index";
 
 // Define a function for creating an organization
-export const registerOrganization = async (organizationData: any, FilePath: string) => {
+export const registerOrganization = async (organizationData: any) => {
   try {
     
     // Create a new organization instance
     const newOrganization = new organization(organizationData);
-    newOrganization.organizationLogo = FilePath
+  
   
     
     // Save the organization to the database

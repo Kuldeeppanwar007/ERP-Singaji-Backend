@@ -1,27 +1,19 @@
 // Import Services, Configerations
 import { checkIfEmailExists, registerOrganization } from "@service/v1/index";
 import { responseMessages } from "@config/index";
-import { uploadFile } from "@utils/cloudinary.utils";
 // import { logger } from '../utils/index.js';
-import {Multer} from 'multer'
 import express, { Request, Response } from "express";
 
 // Define a controllers
 export const organizationController = {
   // Define a function for creating an organization
   registerOrganization: async (req: Request, res: Response) => {
-    console.log("entered");
+
     try {
       // Get the organization data from the request body
       const organizationData = req.body;
-      console.log(organizationData);
+    
 
-      if (!req.file) {
-        return res.status(400).json({
-            hasError: true,
-            message: "Please upload a file"
-        });
-    }
 
       // Check if the email already exists
       const emailExists = await checkIfEmailExists(
@@ -32,10 +24,10 @@ export const organizationController = {
       if (emailExists)
         return res.status(400).json({ message: responseMessages.EMAIL_EXISTS });
 
-      const reqFilePath = await uploadFile(req.file.path)
+     
 
       // Create the organization
-      const newOrganization = await registerOrganization(organizationData,reqFilePath.url);
+      const newOrganization = await registerOrganization(organizationData);
 
       if (!newOrganization)
         res
