@@ -1,4 +1,4 @@
-export interface Organization{
+export interface organization{
     organizationName: string,
     organizationType:string,
     organizationEmail: string,

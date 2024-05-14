@@ -12,5 +12,4 @@ const router = express.Router();
 
 // ROUTES : Register
 router.post("/register", uploader.single("logo"), organizationController.registerOrganization);
-
 export default router;
