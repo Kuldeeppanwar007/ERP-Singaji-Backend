@@ -30,7 +30,7 @@ let transporter = nodemailer.createTransport({
 export const sendMail = async (emailOptions:any) => {
   try {
     await transporter.sendMail(emailOptions);
-    console.log(`Email successfully sent to ${emailOptions.to}`);
+    logger.info(`Email successfully sent to ${emailOptions.to}`);
     return true;
   } catch (error) {
      logger.error(`Error sending email: ${error}`);
