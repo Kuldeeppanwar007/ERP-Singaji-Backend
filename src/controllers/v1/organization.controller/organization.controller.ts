@@ -5,6 +5,7 @@ import {
   getAllOrganization,
   registerUser,
   getOrganizationById,
+  updateOrganizationById,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -17,8 +18,6 @@ export const organizationController = {
     try {
       // Get the organization data from the request body
       const organizationData = req.body;
-
-      console.log(organizationData);
 
       // Check if the email already exists
       const emailExists = await checkIfEmailExists(
@@ -39,21 +38,6 @@ export const organizationController = {
           .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       logger.info("New Organization Created Successfully !");
-
-      // Create Admin
-      // const tempPass: string = generatePassword(20);
-
-      // let admin = await registerUser({
-      //   name: organizationData.organizationName,
-      //   email: organizationData.organizationEmail,
-      //   tempPassword: tempPass,
-      //   role: "ADMIN",
-      // });
-
-      // if (!admin)
-      //   res
-      //     .status(400)
-      //     .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       // Send a response with the new organization
       res
@@ -101,12 +85,44 @@ export const organizationController = {
   },
   getOrganizationById: async (req: Request, res: Response) => {
     try {
-      const id: any = req.params;
+      const _id: any = req.params.id;
+      console.log(_id);
+
       // Getting All Organizations
-      const allOrganizations = await getOrganizationById(id);
+      const organization = await getOrganizationById(_id);
+      console.log(organization);
 
       // If no organizations then return data not found
-      if (!allOrganizations)
+      if (!organization || organization.length == 0)
+        res
+          .status(404)
+          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+
+      // Return Response
+      return res
+        .status(200)
+        .json(new ApiResponse(200, organization, responseMessages.DATA_FOUND));
+    } catch (error) {
+      // If an error occurred, send a response with the error message
+      logger.warn(error);
+      res
+        .status(500)
+        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+    }
+  },
+  updateOrganization: async (req: Request, res: Response) => {
+    try {
+      console.log("Entered");
+
+      const id: any = req.params;
+      const payload = req.body;
+      logger.info(id);
+      logger.info(payload);
+
+      const updatedOrganization = await updateOrganizationById(id, payload);
+
+      // If no organizations then return data not found
+      if (!updatedOrganization)
         res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
@@ -115,7 +131,7 @@ export const organizationController = {
       return res
         .status(200)
         .json(
-          new ApiResponse(200, allOrganizations, responseMessages.DATA_FOUND)
+          new ApiResponse(200, updatedOrganization, responseMessages.DATA_FOUND)
         );
     } catch (error) {
       // If an error occurred, send a response with the error message

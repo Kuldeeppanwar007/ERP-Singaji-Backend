@@ -21,7 +21,6 @@ export const registerOrganization = async (organizationData: organization) => {
     return false;
   }
 };
-
 // Define a function for get all organizations
 export const getAllOrganization = async () => {
   try {
@@ -38,31 +37,32 @@ export const getAllOrganization = async () => {
   }
 };
 // Define a function for get organization by ID
-export const getOrganizationById = async (id: string) => {
+export const getOrganizationById = async (_id: string) => {
   try {
+    logger.info(_id);
     // Geting Organization By ID
-    const organization = await Organization.find({ _id: id });
+    const organization = await Organization.find({ _id });
     // If No Organization then return false
     if (!organization) return false;
     // Return organization
     logger.info("Successfully Get Organization");
     return organization;
   } catch (error) {
-    logger.error(error);
+    logger.warn(error);
     return false;
   }
 };
 // Define a function for update organization by ID
-export const updateOrganizationById = async (id: string, payload: object) => {
+export const updateOrganizationById = async (_id: string, payload: object) => {
   try {
     // Update Organization
-    const updatedOrganization = await Organization.findByIdAndUpdate(
-      id,
-      payload
-    );
+    const updatedOrganization = await Organization.findByIdAndUpdate({
+      _id,
+      payload,
+    });
     // If No organization then return false
     if (!updatedOrganization) return false;
-    // Return All organizations
+    // Return updated organizations
     logger.info("Successfully Updated Organizations");
     return updatedOrganization;
   } catch (error) {

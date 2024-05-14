@@ -1,5 +1,5 @@
 // Import the mongoose module
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define a new Mongoose schema for an organization
 const organizationSchema = new mongoose.Schema(
@@ -7,14 +7,22 @@ const organizationSchema = new mongoose.Schema(
     organizationName: { type: String, required: true },
     organizationType: { type: String, required: true },
     organizationEmail: { type: String, required: true, unique: true },
-    organizationAddress: { type: String, required: true },
-    organizationWebsite: { type: String, required: true },
+    organizationAddress: {
+      type: Schema.Types.ObjectId,
+      ref: "address",
+    },
+    organizationWebsite: { type: String },
+    contactPersonName: { type: String, required: true },
     organizationPhone: { type: String, required: true },
-    affiliations: { type: String, required: true },
+    affiliations: { type: String },
     organizationRegistrationInfo: { type: String, required: true },
     organizationVision: { type: String, required: true },
-    socialMediaProfiles: [{ type: String, required: true }],
+    socialMediaProfiles: [{ type: String}],
     organizationLogo: { type: String, required: true },
+    alternateNumber: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["PENDING", "APPROVED", "REJECT"],
@@ -25,7 +33,7 @@ const organizationSchema = new mongoose.Schema(
       default: false,
     },
     tanentId: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "tenant",
     },
   },
