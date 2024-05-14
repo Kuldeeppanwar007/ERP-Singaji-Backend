@@ -11,3 +11,4 @@
 {"level":"info","message":"All Addresses Retrieved Successfully","source":"","timestamp":"2024-05-11 14:35:27.274 +0530"}
 {"level":"info","message":"Address updated successfully","source":"","timestamp":"2024-05-11 14:37:08.537 +0530"}
 {"level":"info","message":"Address deleted successfully","source":"","timestamp":"2024-05-11 14:38:55.236 +0530"}
+{"level":"error","message":"User not found","source":"","timestamp":"2024-05-14 14:34:58.272 +0530"}
