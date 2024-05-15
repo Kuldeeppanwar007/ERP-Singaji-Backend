@@ -1,26 +1,30 @@
-import express from "express";
+import express , {Request, Response, NextFunction} from "express";
 import cors from "cors";
-import swaggerUi from 'swagger-ui-express'
-import  YAML from 'yamljs'
-const swaggerJsDocs = YAML.load('./api.yaml')
 import dotenv from "dotenv";
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
+import httContext from 'express-http-context'
 
 // Import utilities
 import { mongooseConnection } from "../src/utils/index";
 
 // Import Middleware
-import { rateLimitMiddleware } from 'middlewares';
+import { morganMiddleware, rateLimitMiddleware } from 'middlewares';
 
 const app = express()
+
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.use("/api-docs", swaggerUi.serve,swaggerUi.setup(swaggerJsDocs))
-
+app.use(httContext.middleware)
+app.use(function(req, res, next) {
+  const reqId = uuidv4();
+  httContext.set('reqId', reqId);
+  next();
+});
 app.use(rateLimitMiddleware)
-
+app.use(morganMiddleware)
 
 // Import Routers
 import { addressRoutes, countryRoutes, organizationRoutes, userRoutes } from "@routes/v1/index";
@@ -30,9 +34,8 @@ const url: string = <string>process.env.MONGODB_URI;
 console.log(url);
 mongooseConnection(url + "Singa_Ji_Erp_Master");
 
-app.get("/string", (req,res)=>{
-  console.log("called")
-})
+
+
 
 // START: Routes
 app.use("/api/v1/user", userRoutes);

@@ -27,6 +27,7 @@ export const organizationController = {
 
       // Check and Return if exits
       if (emailExists)
+        logger.error("User already exist")
         return res
           .status(400)
           .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
