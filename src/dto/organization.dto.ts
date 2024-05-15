@@ -4,7 +4,7 @@ export interface organization{
     organizationEmail: string,
     organizationAddress: string,
     organizationWebsite: string,
-    organizationPhone:number,
+    organizationPhone:string,
     affiliations: string,
     organizationRegistrationInfo:string,
     organizationVision: string,

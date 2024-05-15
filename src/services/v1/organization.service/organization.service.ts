@@ -5,7 +5,7 @@ import { organization } from "dto/organization.dto";
 // Import Utilities
 import { logger } from "@utils/index";
 
-// Define a function for creating an organization
+// SERVICE: Register Organization
 export const registerOrganization = async (organizationData: organization) => {
   try {
     // Create a new organization instance
@@ -22,6 +22,21 @@ export const registerOrganization = async (organizationData: organization) => {
   }
 };
 
+// SERVICE: Verify Organization
+export const verifyOrganization = async(id: any, data: any)=>{
+  try{
+
+    const organization = await Organization.findByIdAndUpdate(id, data)
+
+    if(organization){
+      return organization
+    }
+    return false
+  }catch(error){
+    return false
+
+  }
+}
 // Define a function for get all organizations
 export const getAllOrganization = async () => {
   try {

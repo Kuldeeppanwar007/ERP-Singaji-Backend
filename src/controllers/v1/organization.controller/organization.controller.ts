@@ -5,20 +5,24 @@ import {
   getAllOrganization,
   registerUser,
   getOrganizationById,
+  verifyOrganization,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
-import { generatePassword, logger, ApiError, ApiResponse } from "@utils/index";
+import { generatePassword, logger, ApiError, ApiResponse,sendMail } from "@utils/index";
+import { Organization } from "@models/v1/index";
+import {admin} from "@config/index"
+import { organization } from "@dto/organization.dto";
 
 // Define a controllers
 export const organizationController = {
-  // Define a function for creating an organization
+  
+  // FUNCTION: Create an organization and send email to the superadmin
   registerOrganization: async (req: Request, res: Response) => {
     try {
       // Get the organization data from the request body
       const organizationData = req.body;
 
-      console.log(organizationData);
 
       // Check if the email already exists
       const emailExists = await checkIfEmailExists(
@@ -56,9 +60,7 @@ export const organizationController = {
       //     .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       // Send a response with the new organization
-      res
-        .status(201)
-        .json(
+      res.status(201).json(
           new ApiResponse(
             201,
             newOrganization,
@@ -72,6 +74,39 @@ export const organizationController = {
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
+  },
+
+  // FUNCTION: Verify the organization by superadmin
+  verifyOrganization: async(req:Request, res: Response)=>{
+    try{
+
+      const _id = req.params.id
+      const requestBody = req.body
+
+
+      const organization: any = await verifyOrganization(_id, requestBody)
+
+      console.log(organization.organizationEmail)
+
+      const tempPass: string = generatePassword(20);
+
+      const user = admin.auth().createUser({
+        email: organization.organizationEmail,
+        password:tempPass,
+        emailVerified: false,
+        disabled: false 
+      })
+
+  return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
+
+    }catch(error){
+      logger.error(error);
+      res
+        .status(500)
+        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+    }
+
+
   },
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
@@ -125,4 +160,4 @@ export const organizationController = {
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
-};
+}
