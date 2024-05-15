@@ -48,7 +48,7 @@ export const getOrganizationById = async (_id: string) => {
     logger.info("Successfully Get Organization");
     return organization;
   } catch (error) {
-    logger.warn(error);
+    logger.error(new Error("ID Mismatch"));
     return false;
   }
 };

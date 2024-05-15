@@ -6,6 +6,7 @@ import {
   registerUser,
   getOrganizationById,
   updateOrganizationById,
+  createAddress,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -23,12 +24,18 @@ export const organizationController = {
       const emailExists = await checkIfEmailExists(
         organizationData.organizationEmail
       );
-
       // Check and Return if exits
       if (emailExists)
         return res
           .status(400)
           .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      // Store Address in Address collection
+      const newAddress = await createAddress(
+        organizationData.organizationAddress
+      );
+      if (typeof newAddress === "object") {
+        organizationData.organizationAddress = newAddress._id;
+      }
       // Create the organization
       const newOrganization = await registerOrganization(organizationData);
 
@@ -94,7 +101,7 @@ export const organizationController = {
 
       // If no organizations then return data not found
       if (!organization || organization.length == 0)
-        res
+        return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
@@ -104,7 +111,7 @@ export const organizationController = {
         .json(new ApiResponse(200, organization, responseMessages.DATA_FOUND));
     } catch (error) {
       // If an error occurred, send a response with the error message
-      logger.warn(error);
+      logger.error(new Error('ID Mismatch'));
       res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
