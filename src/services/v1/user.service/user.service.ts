@@ -2,7 +2,7 @@
 import { User } from "@models/v1/index";
 
 import { generateHash } from "@utils/index";
-import { UserCreateInput } from "dto/user.dto";
+import { UserCreateInput } from "@dto/user.dto";
 import { logger } from '@utils/index'
 
 // Function: Register User

@@ -3,7 +3,7 @@ import { organizationController } from "@controllers/v1/index";
 import express from "express";
 
 // Middlewares
-import { tanentConnection, uploader } from "middlewares";
+import { tanentConnection } from "middlewares";
 
 // Create Router
 const router = express.Router();

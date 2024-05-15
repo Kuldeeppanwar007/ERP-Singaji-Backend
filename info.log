@@ -98,3 +98,4 @@
 {"level":"info","message":"Successfully Get Organization","source":"","timestamp":"2024-05-15 18:35:54.906 +0530"}
 {"level":"info","message":"6644b22e4972333dd5bc227","source":"","timestamp":"2024-05-15 18:36:02.790 +0530"}
 {"level":"error","message":"ID Mismatch","source":"","stack":"Error: ID Mismatch\n    at getOrganizationById (D:\\SingaJiProjects\\ERP-Singaji-Backend\\src\\services\\v1\\organization.service\\organization.service.ts:51:18)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at getOrganizationById (D:\\SingaJiProjects\\ERP-Singaji-Backend\\src\\controllers\\v1\\organization.controller\\organization.controller.ts:99:28)","timestamp":"2024-05-15 18:36:02.793 +0530"}
+{"level":"error","message":"User not found","source":"","timestamp":"2024-05-14 14:34:58.272 +0530"}

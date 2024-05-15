@@ -99,20 +99,21 @@ export const userController = {
     getUsers: async (req:Request, res:Response) => {
         try {
             const allUsers = await getAllUsers();
+            logger.error("User not found")
             if (!allUsers || allUsers.length === 0) {
                 return res.status(404).json({
                     hasError: true,
                     message: responseMessages.USER_NOT_FOUND,
                 });
             }
-            // logger.info('All Users Retrieved Successfully');
+             logger.info('All Users Retrieved Successfully');
             return res.status(200).json({
                 hasError: false,
                 message: responseMessages.USER_FOUND,
                 data: allUsers,
             });
         } catch (err) {
-            // logger.error(err);
+             logger.error(err);
             return res.status(500).json({
                 hasError: true,
                 message: responseMessages.INTERNAL_SERVER_ERROR,

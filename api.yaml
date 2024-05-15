@@ -1,0 +1,17 @@
+swagger: "2.0"
+info:
+   title: Singaji Erp
+   description: This is the documentation of Sinagji Erp
+   version: 1.0
+   contact:
+      email: admin@ssism.org
+   servers:
+      - url: http://localhost:3001/
+
+schemes: [http, https]
+
+path: 
+   /string:
+     get:
+       summary: Returns a string
+       description: Its just returning a fake string
