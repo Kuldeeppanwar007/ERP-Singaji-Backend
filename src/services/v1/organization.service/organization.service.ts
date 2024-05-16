@@ -42,11 +42,12 @@ export const registerOrganization = async (organizationData: organization) => {
     return false;
   }
 };
-// Define a function for get all organizations
+
+// SERVICE: Get all the organizations
 export const getOrganizations = async () => {
   try {
     // Geting All Organizations
-    const allOrganizations = await Organization.find();
+    const allOrganizations = await Organization.find()
     // If No Organizations then return false
     if (!allOrganizations || allOrganizations.length == 0) return false;
     // Return All organizations
