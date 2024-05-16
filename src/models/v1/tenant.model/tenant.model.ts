@@ -34,6 +34,6 @@ const tenantSchema = new mongoose.Schema({
   },
 });
 
-const Tenant = mongoose.model("tenant", tenantSchema);
+export const Tenant = mongoose.model("tenant", tenantSchema);
 
 export default Tenant;

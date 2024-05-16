@@ -8,13 +8,8 @@ import { logger } from "@utils/index";
 // Function: Register User
 export async function registerUser(payload: any) {
   try {
-    console.log(payload);
-    // Hash Password
-    payload.password = generateHash(payload.password);
-
     // Create New User
     const user = new User(payload);
-
     // Save in Database
     await user.save();
 

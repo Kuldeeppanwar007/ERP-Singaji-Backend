@@ -5,6 +5,7 @@ import mongoose, { Schema } from "mongoose";
 const organizationSchema = new mongoose.Schema(
   {
     organizationName: { type: String, required: true },
+    adminName: { type: String, required: true },
     organizationType: { type: String, required: true },
     organizationEmail: { type: String, required: true, unique: true },
     organizationAddress: {
@@ -12,7 +13,6 @@ const organizationSchema = new mongoose.Schema(
       ref: "Address",
     },
     organizationWebsite: { type: String },
-    adminName: { type: String, required: true },
     organizationPhone: { type: String, required: true },
     affiliations: { type: String },
     organizationRegistrationInfo: { type: String, required: true },
@@ -25,12 +25,16 @@ const organizationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECT"],
+      enum: ["PENDING", "APPROVED", "REJECTED"],
       default: "PENDING",
     },
-    isVerified: {
+    isActive: {
       type: Boolean,
       default: false,
+    },
+    planType: {
+      type: String,
+      enum: ["BASIC", "ADVANCED", "ENTERPRISE"],
     },
     tanentId: {
       type: Schema.Types.ObjectId,
