@@ -9,7 +9,7 @@ const organizationSchema = new mongoose.Schema(
     organizationEmail: { type: String, required: true, unique: true },
     organizationAddress: {
       type: Schema.Types.ObjectId,
-      ref: "address",
+      ref: "Address",
     },
     organizationWebsite: { type: String },
     contactPersonName: { type: String, required: true },
@@ -17,7 +17,7 @@ const organizationSchema = new mongoose.Schema(
     affiliations: { type: String },
     organizationRegistrationInfo: { type: String, required: true },
     organizationVision: { type: String, required: true },
-    socialMediaProfiles: [{ type: String}],
+    socialMediaProfiles: [{ type: String }],
     organizationLogo: { type: String, required: true },
     alternateNumber: {
       type: String,
@@ -41,7 +41,7 @@ const organizationSchema = new mongoose.Schema(
 );
 
 // Create a Mongoose model from the schema
-const organization = mongoose.model("organization", organizationSchema);
+const Organization = mongoose.model("organization", organizationSchema);
 
 // Export the model for use in other modules
-export default organization;
+export default Organization;

@@ -22,7 +22,7 @@ export const registerOrganization = async (organizationData: organization) => {
   }
 };
 // Define a function for get all organizations
-export const getAllOrganization = async () => {
+export const getOrganizations = async () => {
   try {
     // Geting All Organizations
     const allOrganizations = await Organization.find();
@@ -39,14 +39,16 @@ export const getAllOrganization = async () => {
 // Define a function for get organization by ID
 export const getOrganizationById = async (_id: string) => {
   try {
-    logger.info(_id);
     // Geting Organization By ID
-    const organization = await Organization.find({ _id });
+    logger.info("Entered In GetORG By Id");
+    const organizationData = await Organization.findById(_id);
+    console.log(organizationData);
+
     // If No Organization then return false
-    if (!organization) return false;
+    if (!organizationData) return false;
     // Return organization
     logger.info("Successfully Get Organization");
-    return organization;
+    return organizationData;
   } catch (error) {
     logger.error(new Error("ID Mismatch"));
     return false;
@@ -72,7 +74,7 @@ export const updateOrganizationById = async (_id: string, payload: object) => {
 };
 
 // Define a function for checking if an email exists
-export const checkIfEmailExists = async (email: string) => {
+export const checkOrgEmailExists = async (email: string) => {
   try {
     // Find an organization with the given email address
     const newOrganization = await Organization.findOne({
