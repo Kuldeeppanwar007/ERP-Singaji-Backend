@@ -78,7 +78,7 @@ export const organizationController = {
     try {
       // Getting All Organizations
       const allOrganizations = await getAllOrganization();
-      console.log(allOrganizations);
+      
 
       // If no organizations then return data not found
       if (!allOrganizations)
