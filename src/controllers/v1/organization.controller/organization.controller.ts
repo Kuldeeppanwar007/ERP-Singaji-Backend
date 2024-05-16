@@ -13,6 +13,7 @@ import {
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
 import { generatePassword, logger, ApiError, ApiResponse } from "@utils/index";
+import { organization } from "@dto/organization.dto";
 
 // Define a controllers
 export const organizationController = {
@@ -144,7 +145,7 @@ export const organizationController = {
 
       const id: string = req.params.id;
       const payload = req.body;
-      const { organizationAddress } = payload;
+      const { organizationAddress } = <organization>payload;
       logger.info(id);
       logger.info(payload);
       // logger.info(organizationAddress);
@@ -159,17 +160,26 @@ export const organizationController = {
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
       }
       // If Email Are different then also give error and return
-      if (payload?.organizationEmail !== organization.organizationEmail) {
-        logger.error("Can't Not change email");
-        return res.status(400).json(new ApiError(400, "Can Not Change Email"));
-      }
+      // if (payload?.organizationEmail == organization.organizationEmail) {
+      //   logger.error("Can't Not change email");
+      //   return res.status(400).json(new ApiError(400, "Can Not Change Email"));
+      // }
 
       // Address update Code
       if (payload?.organizationAddress) {
-        const updatedAddress = await updateAddressById(
-          organization.organizationAddress?._id,
-          payload.organizationAddress
+        // const updatedAddress = await updateAddressById(
+        //   organization.organizationAddress,
+        //   payload.organizationAddress
+        // );
+        // if (organization.organizationAddress) {
+
+        // }
+        console.log(
+          organization.organizationAddress,
+          payload.organizationAddress.country
         );
+
+        // const updatedAddress=await updateAddressById()
       }
 
       // const updatedOrganization = await updateOrganizationById(id, payload);

@@ -4,6 +4,7 @@ import { address } from "@dto/address.dto";
 
 // Import Utilities
 import { logger } from "@utils/index";
+import { ObjectId } from "mongoose";
 
 // Define a function for creating an address
 export const createAddress = async (addressData: address) => {
@@ -68,15 +69,14 @@ export const getAllAddresses = async () => {
 
 // Define a function for updating an address by ID
 export const updateAddressById = async (
-  addressId: string,
+  addressId: ObjectId | undefined,
   updatedData: object
 ) => {
   try {
     // Update address
     const updatedAddress = await Address.findByIdAndUpdate(
       addressId,
-      updatedData,
-      { new: true }
+      updatedData
     );
 
     // If no address found, return false

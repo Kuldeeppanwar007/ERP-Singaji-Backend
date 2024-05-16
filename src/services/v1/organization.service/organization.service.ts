@@ -42,7 +42,6 @@ export const getOrganizationById = async (_id: string) => {
     // Geting Organization By ID
     logger.info("Entered In GetORG By Id " + _id);
     const organizationData = await Organization.findById(_id);
-    console.log(organizationData);
 
     // If No Organization then return false
     if (!organizationData) return false;
