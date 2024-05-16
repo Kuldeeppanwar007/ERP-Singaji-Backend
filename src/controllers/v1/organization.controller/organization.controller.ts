@@ -12,7 +12,7 @@ import { Request, Response } from "express";
 import { generatePassword, logger, ApiError, ApiResponse,sendMail } from "@utils/index";
 import { Organization } from "@models/v1/index";
 import {admin} from "@config/index"
-import { organization } from "@dto/organization.dto";
+import { createOrganizationInput, organization } from "@dto/organization.dto";
 
 // Define a controllers
 export const organizationController = {
@@ -21,43 +21,46 @@ export const organizationController = {
   registerOrganization: async (req: Request, res: Response) => {
     try {
       // Get the organization data from the request body
-      const organizationData = req.body;
+      const {
+        organizationName,organizationType,
+        organizationEmail,organizationAddress,
+        organizationWebsite,organizationPhone,
+        affiliations,organizationRegistrationInfo,
+        organizationVision,socialMediaProfiles,
+        organizationLogo} = <createOrganizationInput>req.body;
 
 
       // Check if the email already exists
-      const emailExists = await checkIfEmailExists(
-        organizationData.organizationEmail
-      );
+      const emailExists = await checkIfEmailExists(organizationEmail);
 
       // Check and Return if exits
-      if (emailExists)
-        return res
-          .status(400)
-          .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      if (emailExists){
+        return res.status(400).json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      }
       // Create the organization
-      const newOrganization = await registerOrganization(organizationData);
+      const newOrganization = await registerOrganization({
+        organizationName,organizationType,
+        organizationEmail,organizationAddress,
+        organizationWebsite,organizationPhone,
+        affiliations,organizationRegistrationInfo,
+        organizationVision,socialMediaProfiles,
+        organizationLogo
 
-      if (!newOrganization)
-        res
-          .status(400)
-          .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
+      });
 
+      if (!newOrganization){
+        res.status(400).json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
+      }
+
+    await sendMail({
+          from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
+          to: organizationEmail,
+          subject: `Welcome to Our Community, ${organizationEmail}! 🎉`,
+          text: `Hi ${organizationName},\n\nWelcome to our community! We're thrilled to have you on board. Get ready to explore, connect, and enjoy. If you have any questions or need assistance, feel free to reach out.\n\nCheers,\nThe Team`,
+          // html: 'HTML version of the message'
+      });
       logger.info("New Organization Created Successfully !");
 
-      // Create Admin
-      // const tempPass: string = generatePassword(20);
-
-      // let admin = await registerUser({
-      //   name: organizationData.organizationName,
-      //   email: organizationData.organizationEmail,
-      //   tempPassword: tempPass,
-      //   role: "ADMIN",
-      // });
-
-      // if (!admin)
-      //   res
-      //     .status(400)
-      //     .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       // Send a response with the new organization
       res.status(201).json(
