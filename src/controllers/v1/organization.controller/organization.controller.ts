@@ -1,11 +1,11 @@
 // Import Services, Configerations
 import {
-  checkIfEmailExists,
+  checkOrgEmailExists,
   registerOrganization,
-  getAllOrganization,
+  getOrganizations,
   registerUser,
   getOrganizationById,
-  verifyOrganization,
+  // verifyOrganization,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -31,7 +31,7 @@ export const organizationController = {
 
 
       // Check if the email already exists
-      const emailExists = await checkIfEmailExists(organizationEmail);
+      const emailExists = await checkOrgEmailExists(organizationEmail);
 
       // Check and Return if exits
       if (emailExists){
@@ -80,41 +80,41 @@ export const organizationController = {
   },
 
   // FUNCTION: Verify the organization by superadmin
-  verifyOrganization: async(req:Request, res: Response)=>{
-    try{
+  // verifyOrganization: async(req:Request, res: Response)=>{
+  //   try{
 
-      const _id = req.params.id
-      const requestBody = req.body
-
-
-      const organization: any = await verifyOrganization(_id, requestBody)
-
-      console.log(organization.organizationEmail)
-
-      const tempPass: string = generatePassword(20);
-
-      const user = admin.auth().createUser({
-        email: organization.organizationEmail,
-        password:tempPass,
-        emailVerified: false,
-        disabled: false 
-      })
-
-  return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
-
-    }catch(error){
-      logger.error(error);
-      res
-        .status(500)
-        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
-    }
+  //     const _id = req.params.id
+  //     const requestBody = req.body
 
 
-  },
+  //     const organization: any = await verifyOrganization(_id, requestBody)
+
+  //     console.log(organization.organizationEmail)
+
+  //     const tempPass: string = generatePassword(20);
+
+  //     const user = admin.auth().createUser({
+  //       email: organization.organizationEmail,
+  //       password:tempPass,
+  //       emailVerified: false,
+  //       disabled: false 
+  //     })
+
+  // return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
+
+  //   }catch(error){
+  //     logger.error(error);
+  //     res
+  //       .status(500)
+  //       .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+  //   }
+
+
+  // },
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
       // Getting All Organizations
-      const allOrganizations = await getAllOrganization();
+      const allOrganizations = await getOrganizations();
       console.log(allOrganizations);
 
       // If no organizations then return data not found
