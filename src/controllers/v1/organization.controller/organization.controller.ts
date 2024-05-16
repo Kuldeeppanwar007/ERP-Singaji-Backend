@@ -25,49 +25,57 @@ export const organizationController = {
   registerOrganization: async (req: Request, res: Response) => {
     try {
       // Get the organization data from the request body
-      const {
-        organizationName,organizationType,
-        organizationEmail,organizationAddress,
-        organizationWebsite,organizationPhone,
-        affiliations,organizationRegistrationInfo,
-        organizationVision,socialMediaProfiles,
-        organizationLogo} = <createOrganizationInput>req.body;
-
+      const organizationData = req.body;
 
       // Check if the email already exists
-      const emailExists = await checkOrgEmailExists(organizationEmail);
+      const emailExists = await checkOrgEmailExists(
+        organizationData.organizationEmail
+      );
 
       // Check and Return if exits
-      if (emailExists){
-        return res.status(400).json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      if (emailExists) {
+        logger.error("Email already exists");
+        return res
+          .status(400)
+          .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      }
+      // Get Country's ObjectId
+      const country = await getCountry(
+        organizationData.organizationAddress.country
+      );
+      // Check country are exists or not
+      if (!country) {
+        logger.error("Country Not Found");
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.COUNTRY_NOT_FOUND));
+      }
+      // if Country are an object then get {_id} from this object and set into address's country
+      if (typeof country === "object") {
+        organizationData.organizationAddress.country = country._id;
+      }
+
+      // Store Address in Address collection
+      const newAddress = await createAddress(
+        organizationData.organizationAddress
+      );
+      if (typeof newAddress === "object") {
+        organizationData.organizationAddress = newAddress._id;
       }
       // Create the organization
-      const newOrganization = await registerOrganization({
-        organizationName,organizationType,
-        organizationEmail,organizationAddress,
-        organizationWebsite,organizationPhone,
-        affiliations,organizationRegistrationInfo,
-        organizationVision,socialMediaProfiles,
-        organizationLogo
+      const newOrganization = await registerOrganization(organizationData);
 
-      });
+      if (!newOrganization)
+        return res
+          .status(400)
+          .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
-      if (!newOrganization){
-        res.status(400).json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
-      }
-
-    await sendMail({
-          from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
-          to: organizationEmail,
-          subject: `Welcome to Our Community, ${organizationEmail}! 🎉`,
-          text: `Hi ${organizationName},\n\nWelcome to our community! We're thrilled to have you on board. Get ready to explore, connect, and enjoy. If you have any questions or need assistance, feel free to reach out.\n\nCheers,\nThe Team`,
-          // html: 'HTML version of the message'
-      });
       logger.info("New Organization Created Successfully !");
 
-
       // Send a response with the new organization
-      res.status(201).json(
+      return res
+        .status(201)
+        .json(
           new ApiResponse(
             201,
             newOrganization,
@@ -77,7 +85,7 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
