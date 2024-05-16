@@ -6,3 +6,24 @@
 2024-05-16T06:42:53.023Z [error] Cannot populate path `address` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: a072cf4d-7fd1-496b-afb1-a2cfbe25190a
 2024-05-16T06:45:46.947Z [info] Successfully Get All Organizations reqId: 8c257b06-c3af-45a0-9c3f-e970a6dd09d2
 2024-05-16T06:45:47.479Z [http] GET /api/v1/organization/getOrganizations 200 2867 - 879.602 ms reqId: 8c257b06-c3af-45a0-9c3f-e970a6dd09d2
+2024-05-16T14:46:31.265Z [info] Successfully Get All Organizations reqId: 7b441bcb-4948-4c39-b34b-5a51bea7d80a
+2024-05-16T14:46:31.308Z [http] GET /api/v1/organization/getOrganizations 200 1436 - 167.297 ms reqId: 7b441bcb-4948-4c39-b34b-5a51bea7d80a
+2024-05-16T14:51:06.888Z [error] Cannot populate path `address` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: 89c764ca-5027-4eb1-8a04-81d28d70643d
+2024-05-16T14:54:48.983Z [error] Cannot populate path `Address` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: 228d9670-20ef-4d0d-8927-563d3373bc30
+2024-05-16T14:58:02.333Z [error] Cannot populate path `addresses` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: 94a56d99-4dff-4d20-8022-e733e7bb12da
+2024-05-16T14:59:10.917Z [info] Successfully Get All Organizations reqId: 2b1a4e3c-8ebb-41b7-8290-6325a0c504c8
+2024-05-16T14:59:10.986Z [http] GET /api/v1/organization/getOrganizations 200 1878 - 231.007 ms reqId: 2b1a4e3c-8ebb-41b7-8290-6325a0c504c8
+2024-05-16T15:00:31.323Z [error] Cannot populate path `country` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: c8d611bb-c20d-47c6-a702-226dd155b5aa
+2024-05-16T15:08:43.206Z [error] Cannot populate path `organizationAddress.address` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: 490e7315-59a1-48aa-9777-92a07c80ff20
+2024-05-16T15:09:20.460Z [info] Successfully Get All Organizations reqId: 1f1894ca-d838-4114-b28a-74d7f5e99389
+2024-05-16T15:09:20.519Z [http] GET /api/v1/organization/getOrganizations 200 1954 - 373.242 ms reqId: 1f1894ca-d838-4114-b28a-74d7f5e99389
+2024-05-16T15:23:56.597Z [error] Cast to ObjectId failed for value "{ id: '6645c0e9926106874269bb90' }" (type Object) at path "_id" for model "organization" reqId: 89b67ab1-e978-483e-8ad0-7d45eb9c8d61
+2024-05-16T15:23:56.621Z [http] GET /api/v1/organization/getOrganization/6645c0e9926106874269bb90 500 91 - 47.455 ms reqId: 89b67ab1-e978-483e-8ad0-7d45eb9c8d61
+2024-05-16T15:26:29.222Z [error] Cast to ObjectId failed for value "{ id: '6645c0e9926106874269bb90' }" (type Object) at path "_id" for model "organization" reqId: e24b05ec-3cb6-4688-bc47-293d11c56a3e
+2024-05-16T15:26:29.267Z [http] GET /api/v1/organization/getOrganization/6645c0e9926106874269bb90 500 91 - 69.727 ms reqId: e24b05ec-3cb6-4688-bc47-293d11c56a3e
+2024-05-16T15:28:52.280Z [error] Cast to ObjectId failed for value "{ id: '6645c0e9926106874269bb90' }" (type Object) at path "_id" for model "organization" reqId: 6449cd4b-c662-4747-a3cb-95e6c9d956b8
+2024-05-16T15:28:52.300Z [http] GET /api/v1/organization/getOrganization/6645c0e9926106874269bb90 500 91 - 31.127 ms reqId: 6449cd4b-c662-4747-a3cb-95e6c9d956b8
+2024-05-16T15:29:49.830Z [error] Cast to ObjectId failed for value "{ id: '6645c0e9926106874269bb90' }" (type Object) at path "_id" for model "organization" reqId: d61535d2-fbe3-48e2-bdb8-eb9f0c643562
+2024-05-16T15:29:49.847Z [http] GET /api/v1/organization/getOrganization/6645c0e9926106874269bb90 500 91 - 30.319 ms reqId: d61535d2-fbe3-48e2-bdb8-eb9f0c643562
+2024-05-16T15:30:25.245Z [error] Cast to ObjectId failed for value "{ id: '6645c0e9926106874269bb90' }" (type Object) at path "_id" for model "organization" reqId: fc18d5cf-fe3d-4412-82e3-163a549e1c34
+2024-05-16T15:30:25.276Z [http] GET /api/v1/organization/getOrganization/6645c0e9926106874269bb90 500 91 - 32.039 ms reqId: fc18d5cf-fe3d-4412-82e3-163a549e1c34

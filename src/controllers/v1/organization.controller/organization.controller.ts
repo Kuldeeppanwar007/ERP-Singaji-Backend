@@ -5,13 +5,13 @@ import {
   getOrganizations,
   registerOrganizationAdmin,
   updateOrganizationById,
-  getOrganizationById,
   sendVerificationEmail,
   sendRejectionEmail,
   getCountry,
   registerUser,
   createAddress,
   updateAddressById,
+  findOrganization,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -151,13 +151,16 @@ export const organizationController = {
   },
   getOrganizationById: async (req: Request, res: Response) => {
     try {
-      const id: any = req.params;
+      const id: any = req.params.id;
+      
       // Getting All Organizations
-      const allOrganizations = await getOrganizationById(id);
+      const allOrganizations = await findOrganization(id);
+
+     
 
       // If no organizations then return data not found
       if (!allOrganizations)
-        res
+        return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
@@ -170,7 +173,7 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
@@ -183,7 +186,7 @@ export const organizationController = {
       const tenant = await Tenant.findOne({ tenantName: tenantName });
       const tenantId = tenant ? tenant._id : null;
 
-      const Organization = await getOrganizationById(organizationId);
+      const Organization = await findOrganization(organizationId);
 
       // If no organizations then return data not found
       if (!Organization)

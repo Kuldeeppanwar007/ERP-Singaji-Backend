@@ -6,6 +6,30 @@ import { registerUser } from "@service/v1/index";
 // Import Utilities
 import { logger, sendMail } from "@utils/index";
 
+
+export const findOrganization =async(id: string, email?: string)=>{
+  if(email){
+    return await Organization.findOne({organizationEmail: email}).populate({
+      path: 'organizationAddress',
+      populate: {
+        path: 'country'
+      }
+    })
+  
+  }
+  else{
+  
+    return await Organization.findById(id).populate({
+      path: 'organizationAddress',
+      populate: {
+        path: 'country'
+      }
+    })
+    // 
+  }
+
+
+}
 // Define a function for creating an organization
 export const registerOrganization = async (organizationData: organization) => {
   try {
@@ -47,7 +71,12 @@ export const registerOrganization = async (organizationData: organization) => {
 export const getOrganizations = async () => {
   try {
     // Geting All Organizations
-    const allOrganizations = await Organization.find()
+    const allOrganizations = await Organization.find().populate({
+      path: 'organizationAddress',
+      populate: {
+        path: 'country'
+      }
+    })
     // If No Organizations then return false
     if (!allOrganizations || allOrganizations.length == 0) return false;
     // Return All organizations
@@ -59,23 +88,7 @@ export const getOrganizations = async () => {
   }
 };
 // Define a function for get organization by ID
-export const getOrganizationById = async (_id: string) => {
-  try {
-    // Geting Organization By ID
-    logger.info("Entered In GetORG By Id");
-    const organizationData = await Organization.findById(_id);
-    console.log(organizationData);
 
-    // If No Organization then return false
-    if (!organizationData) return false;
-    // Return organization
-    logger.info("Successfully Get Organization");
-    return organizationData;
-  } catch (error) {
-    logger.error(new Error("ID Mismatch"));
-    return false;
-  }
-};
 // Define a function for update organization by ID
 export const updateOrganizationById = async (_id: string, payload: object) => {
   try {
