@@ -36,14 +36,14 @@ export const organizationController = {
       const newOrganization = await registerOrganization(organizationData);
 
       if (!newOrganization)
-        res
+       return  res
           .status(400)
           .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       logger.info("New Organization Created Successfully !");
 
       // Send a response with the new organization
-      res
+     return res
         .status(201)
         .json(
           new ApiResponse(
@@ -115,7 +115,7 @@ export const organizationController = {
 
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName }: organization = req.body;
+      const { organizationId, status, tenantName }  = <organization>req.body;
 
       const tenant = await Tenant.findOne({ tenantName: tenantName });
       const tenantId = tenant ? tenant._id : null;

@@ -214,3 +214,49 @@
     at ServerResponse.json (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\response.js:279:15)
     at registerOrganization (D:\Singaji_ERP\ERP-Singaji-Backend\src\controllers\v1\organization.controller\organization.controller.ts:48:10)
     at processTicksAndRejections (node:internal/process/task_queues:95:5)
+2024-05-16 12:31:50.397 +0530 [[31merror[39m]  organization validation failed: adminName: Path `adminName` is required. ValidationError: organization validation failed: adminName: Path `adminName` is required.
+    at model.Document.invalidate (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\document.js:3205:32)
+    at D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\document.js:2998:17
+    at D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\schematype.js:1368:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2024-05-16 12:33:18.067 +0530 [[31merror[39m]  organization validation failed: adminName: Path `adminName` is required. ValidationError: organization validation failed: adminName: Path `adminName` is required.
+    at model.Document.invalidate (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\document.js:3205:32)
+    at D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\document.js:2998:17
+    at D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\schematype.js:1368:9
+    at processTicksAndRejections (node:internal/process/task_queues:77:11)
+2024-05-16 12:34:18.053 +0530 [[32minfo[39m]  New Organization Created Successfully ! 
+2024-05-16 12:34:21.444 +0530 [[31merror[39m]  Error sending email: Error: No recipients defined 
+2024-05-16 12:43:06.316 +0530 [[32minfo[39m]  Successfully Get Organization 
+2024-05-16 12:43:07.243 +0530 [[32minfo[39m]  Successfully Updated Organizations 
+2024-05-16 12:43:07.246 +0530 [[32minfo[39m]  Organization Verified Successfully 
+2024-05-16 12:43:08.277 +0530 [[32minfo[39m]  {
+    "name": "Nikhil",
+    "email": "ssism@ssism.org",
+    "role": "ADMIN",
+    "organizationId": "6645aff1a830d415766e52f2",
+    "tenantId": null,
+    "_id": "6645b203fe3570e008e5c984",
+    "createdAt": "2024-05-16T07:13:08.027Z",
+    "updatedAt": "2024-05-16T07:13:08.027Z",
+    "__v": 0
+} 
+2024-05-16 12:43:21.151 +0530 [[32minfo[39m]  {
+    "uid": "uagghxj9oCYXovolKnOdCsMYzKi2",
+    "email": "ssism@ssism.org",
+    "emailVerified": false,
+    "disabled": false,
+    "metadata": {
+        "lastSignInTime": null,
+        "creationTime": "Thu, 16 May 2024 07:13:15 GMT",
+        "lastRefreshTime": null
+    },
+    "tokensValidAfterTime": "Thu, 16 May 2024 07:13:15 GMT",
+    "providerData": [
+        {
+            "uid": "ssism@ssism.org",
+            "email": "ssism@ssism.org",
+            "providerId": "password"
+        }
+    ]
+} 
+2024-05-16 12:43:37.622 +0530 [[32minfo[39m]  Email successfully sent to ssism@ssism.org 
