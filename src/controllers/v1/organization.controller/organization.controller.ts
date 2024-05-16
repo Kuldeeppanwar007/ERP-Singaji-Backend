@@ -5,61 +5,65 @@ import {
   getAllOrganization,
   registerUser,
   getOrganizationById,
+  verifyOrganization,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
-import { generatePassword, logger, ApiError, ApiResponse } from "@utils/index";
+import { generatePassword, logger, ApiError, ApiResponse,sendMail } from "@utils/index";
+import { Organization } from "@models/v1/index";
+import {admin} from "@config/index"
+import { createOrganizationInput, organization } from "@dto/organization.dto";
 
 // Define a controllers
 export const organizationController = {
-  // Define a function for creating an organization
+  
+  // FUNCTION: Create an organization and send email to the superadmin
   registerOrganization: async (req: Request, res: Response) => {
     try {
       // Get the organization data from the request body
-      const organizationData = req.body;
+      const {
+        organizationName,organizationType,
+        organizationEmail,organizationAddress,
+        organizationWebsite,organizationPhone,
+        affiliations,organizationRegistrationInfo,
+        organizationVision,socialMediaProfiles,
+        organizationLogo} = <createOrganizationInput>req.body;
 
-      console.log(organizationData);
 
       // Check if the email already exists
-      const emailExists = await checkIfEmailExists(
-        organizationData.organizationEmail
-      );
+      const emailExists = await checkIfEmailExists(organizationEmail);
 
       // Check and Return if exits
-      if (emailExists)
-        logger.error("User already exist")
-        return res
-          .status(400)
-          .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      if (emailExists){
+        return res.status(400).json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      }
       // Create the organization
-      const newOrganization = await registerOrganization(organizationData);
+      const newOrganization = await registerOrganization({
+        organizationName,organizationType,
+        organizationEmail,organizationAddress,
+        organizationWebsite,organizationPhone,
+        affiliations,organizationRegistrationInfo,
+        organizationVision,socialMediaProfiles,
+        organizationLogo
 
-      if (!newOrganization)
-        res
-          .status(400)
-          .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
+      });
 
+      if (!newOrganization){
+        res.status(400).json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
+      }
+
+    await sendMail({
+          from: `"Nikhil Rajput" <${process.env.EMAIL_USER}>`,
+          to: organizationEmail,
+          subject: `Welcome to Our Community, ${organizationEmail}! 🎉`,
+          text: `Hi ${organizationName},\n\nWelcome to our community! We're thrilled to have you on board. Get ready to explore, connect, and enjoy. If you have any questions or need assistance, feel free to reach out.\n\nCheers,\nThe Team`,
+          // html: 'HTML version of the message'
+      });
       logger.info("New Organization Created Successfully !");
 
-      // Create Admin
-      // const tempPass: string = generatePassword(20);
-
-      // let admin = await registerUser({
-      //   name: organizationData.organizationName,
-      //   email: organizationData.organizationEmail,
-      //   tempPassword: tempPass,
-      //   role: "ADMIN",
-      // });
-
-      // if (!admin)
-      //   res
-      //     .status(400)
-      //     .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       // Send a response with the new organization
-      res
-        .status(201)
-        .json(
+      res.status(201).json(
           new ApiResponse(
             201,
             newOrganization,
@@ -74,11 +78,44 @@ export const organizationController = {
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
+
+  // FUNCTION: Verify the organization by superadmin
+  verifyOrganization: async(req:Request, res: Response)=>{
+    try{
+
+      const _id = req.params.id
+      const requestBody = req.body
+
+
+      const organization: any = await verifyOrganization(_id, requestBody)
+
+      console.log(organization.organizationEmail)
+
+      const tempPass: string = generatePassword(20);
+
+      const user = admin.auth().createUser({
+        email: organization.organizationEmail,
+        password:tempPass,
+        emailVerified: false,
+        disabled: false 
+      })
+
+  return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
+
+    }catch(error){
+      logger.error(error);
+      res
+        .status(500)
+        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+    }
+
+
+  },
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
       // Getting All Organizations
       const allOrganizations = await getAllOrganization();
-      
+      console.log(allOrganizations);
 
       // If no organizations then return data not found
       if (!allOrganizations)
@@ -126,4 +163,4 @@ export const organizationController = {
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
-};
+}

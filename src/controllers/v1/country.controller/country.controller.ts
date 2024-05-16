@@ -6,7 +6,7 @@ import { logger } from "@utils/index";
 
 export const countryController = {
   
-    addCountry: async(req: Request, res: Response,next: NextFunction)=>{
+    addCountry: async(req: Request, res: Response)=>{
         try{
 
             const countryData = req.body
@@ -34,7 +34,7 @@ export const countryController = {
             })
         }
     },
-    getCountries: async(req: Request, res: Response, next: NextFunction)=>{
+    getCountries: async(req: Request, res: Response)=>{
 
         try{
             const country = await Country.find()
