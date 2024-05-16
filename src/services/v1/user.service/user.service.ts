@@ -1,57 +1,87 @@
-// Import Models
 import { User } from "@models/v1/index";
-
-import { generateHash } from "@utils/index";
 import { UserCreateInput } from "dto/user.dto";
 import { logger } from "@utils/index";
 
 // Function: Register User
-export async function registerUser(payload: any) {
+export async function registerUser(payload: UserCreateInput) {
   try {
-    // Create New User
     const user = new User(payload);
-    // Save in Database
     await user.save();
-    
     logger.info(user);
     return user;
   } catch (err) {
     logger.error(err);
-    return false;
+    throw new Error("Failed to register user");
   }
 }
 
-// Function: Login User
+// Function: Get User by Email
 export async function getUserByEmail(email: string) {
   try {
     const user = await User.findOne({ email });
-    logger.info("User Found Successfully !");
+    if (!user) {
+      throw new Error("User not found");
+    }
+    logger.info("User found successfully !");
     return user;
   } catch (err) {
     logger.error(err);
-    return false;
+    throw new Error("Failed to get user by email");
   }
 }
 
 // Function: Check Email Exists
 export async function checkEmailExists(email: string) {
   try {
-    let emailExists = false;
     const user = await User.findOne({ email });
-    if (user) emailExists = true;
-    logger.info("Email Found Successfully !");
-    return emailExists;
+    logger.info("Email check completed !");
+    return !!user; 
   } catch (err) {
     logger.error(err);
-    return false;
+    throw new Error("Failed to check email existence");
   }
 }
+
+// Function: Get All Users 
 export async function getAllUsers() {
   try {
     const users = await User.find();
     return users;
   } catch (err) {
-    console.log(err);
-    return false;
+    logger.error(err);
+    throw new Error("Failed to get all users");
+  }
+}
+
+// Function: Update User 
+export async function updateUser(
+  userId: string,
+  payload: UserCreateInput,
+) {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, payload, {
+      new: true,
+    });
+    if (!updatedUser) {
+      throw new Error("User not found");
+    }
+    return updatedUser;
+  } catch (err) {
+    logger.error(err);
+    throw new Error("Failed to update user");
+  }
+}
+
+// Function: Delete User 
+export async function deleteUser(userId: string) {
+  try {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      throw new Error("User not found");
+    }
+    return deletedUser;
+  } catch (err) {
+    logger.error(err);
+    throw new Error("Failed to delete user");
   }
 }

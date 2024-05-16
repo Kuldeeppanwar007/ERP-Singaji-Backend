@@ -1,40 +1,41 @@
-// Import necessary packages and types
 import { Request, Response, NextFunction } from "express";
-import { connectTanent } from "@utils/index";
+import { getTenantDbConnection } from "@utils/index";
+import { Organization } from "@models/v1/index";
+import { organization } from "@dto/organization.dto";
 import dotenv from "dotenv";
-
-// Configure environment variables
 dotenv.config();
 
 // Middleware to connect to tenant
-export const tanentConnection = async (
+export const getTenantConnection = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const { organizationId } = req.body;
+
   try {
-    // Get the organization data from the request body
-    const organizationData = req.body;
-    console.log(organizationData.organizationName);
+    // Retrieve Organization with tenantId populated
+    const organization = (await Organization.findById(
+      organizationId
+    )) as organization;
 
-    // Connection URL
-    let url: string | undefined = process.env.MONGODB_URI;
-
-    // Create a perticuler URL for a Organisation
-    const dbName = organizationData.organizationName.replaceAll(" ", "");
-
-    url += dbName;
-    console.log(url);
-
-    if (!url) {
-      throw new Error("MongoDB URI is not defined in environment variables.");
+    if (!organization) {
+      // Handle missing organization gracefully
+      return res
+        .status(404)
+        .json({ message: `Organization with ID ${organizationId} not found.` });
     }
-    const tanentConnection = connectTanent(url, dbName);
-    req.body.tanentConnection = tanentConnection;
+
+    // Extract tenant ID
+    const tenantId = organization.tenantId;
+
+    // Fetch the tenant database connection
+    const tenantDbConnection = await getTenantDbConnection(tenantId);
     next();
+    return tenantDbConnection;
   } catch (error) {
-    console.error("Error in tenant connection middleware:", error);
-    // Forward the error to the error handling middleware
-    next(error);
+    // Log the error for debugging
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
