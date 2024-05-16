@@ -21,6 +21,8 @@ const responseMessages = {
   ADDRESS_UPDATED: "Address updated successfully.",
   ADDRESS_DELETED: "Address deleted successfully.",
   USER_NOT_CREATED: "User not created",
+  COUNTRY_NOT_FOUND: "Country not found !",
+  COUNTRY_CREATED: "Country created successfully !",
 };
 
 export default responseMessages;

@@ -1,13 +1,17 @@
 // Import Services, Configerations
 import {
-  checkIfEmailExists,
+  checkOrgEmailExists,
   registerOrganization,
-  getAllOrganization,
+  getOrganizations,
   registerOrganizationAdmin,
   updateOrganizationById,
   getOrganizationById,
   sendVerificationEmail,
   sendRejectionEmail,
+  getCountry,
+  registerUser,
+  createAddress,
+  updateAddressById,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -23,27 +27,52 @@ export const organizationController = {
       const organizationData = req.body;
 
       // Check if the email already exists
-      const emailExists = await checkIfEmailExists(
+      const emailExists = await checkOrgEmailExists(
         organizationData.organizationEmail
       );
 
       // Check and Return if exits
-      if (emailExists)
+      if (emailExists) {
+        logger.error("Email already exists");
         return res
           .status(400)
           .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      }
+      // Get Country's ObjectId
+      const country = await getCountry(
+        organizationData.organizationAddress.country
+      );
+      // Check country are exists or not
+      if (!country) {
+        logger.error("Country Not Found");
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.COUNTRY_NOT_FOUND));
+      }
+      // if Country are an object then get {_id} from this object and set into address's country
+      if (typeof country === "object") {
+        organizationData.organizationAddress.country = country._id;
+      }
+
+      // Store Address in Address collection
+      const newAddress = await createAddress(
+        organizationData.organizationAddress
+      );
+      if (typeof newAddress === "object") {
+        organizationData.organizationAddress = newAddress._id;
+      }
       // Create the organization
       const newOrganization = await registerOrganization(organizationData);
 
       if (!newOrganization)
-       return  res
+        return res
           .status(400)
           .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       logger.info("New Organization Created Successfully !");
 
       // Send a response with the new organization
-     return res
+      return res
         .status(201)
         .json(
           new ApiResponse(
@@ -55,20 +84,20 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
-  getAllOrganizations: async (req: Request, res: Response) => {
+  getOrganizations: async (req: Request, res: Response) => {
     try {
       // Getting All Organizations
-      const allOrganizations = await getAllOrganization();
+      const allOrganizations = await getOrganizations();
       console.log(allOrganizations);
 
       // If no organizations then return data not found
       if (!allOrganizations)
-        res
+        return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
@@ -81,20 +110,63 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
   getOrganizationById: async (req: Request, res: Response) => {
     try {
-      const id: any = req.params;
+      const _id: any = req.params.id;
+      console.log(_id);
+
       // Getting All Organizations
-      const allOrganizations = await getOrganizationById(id);
+      const organization = await getOrganizationById(_id);
+      console.log(organization);
 
       // If no organizations then return data not found
-      if (!allOrganizations)
-        res
+      if (!organization)
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+
+      // Return Response
+      return res
+        .status(200)
+        .json(new ApiResponse(200, organization, responseMessages.DATA_FOUND));
+    } catch (error) {
+      // If an error occurred, send a response with the error message
+      logger.error(new Error("ID Mismatch"));
+      return res
+        .status(500)
+        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+    }
+  },
+  updateOrganization: async (req: Request, res: Response) => {
+    try {
+      console.log("Entered");
+
+      const id: any = req.params;
+      const payload = req.body;
+      const { organizationAddress } = payload;
+      logger.info(id);
+      logger.info(payload);
+      // logger.info(organizationAddress);
+
+      const organization = await getOrganizationById(id);
+      if (!organization) {
+        logger.error(responseMessages.DATA_NOT_FOUND);
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+      }
+      console.log(organization);
+
+      const updatedOrganization = await updateOrganizationById(id, payload);
+
+      // If no organizations then return data not found
+      if (!updatedOrganization)
+        return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
@@ -102,12 +174,12 @@ export const organizationController = {
       return res
         .status(200)
         .json(
-          new ApiResponse(200, allOrganizations, responseMessages.DATA_FOUND)
+          new ApiResponse(200, updatedOrganization, responseMessages.DATA_FOUND)
         );
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
@@ -141,11 +213,11 @@ export const organizationController = {
         // create organization admin
         const temporaryPassword: string = generatePassword(10);
         const user = {
-          name: Organization[0].adminName,
-          email: Organization[0].organizationEmail,
+          name: Organization.adminName,
+          email: Organization.organizationEmail,
           password: temporaryPassword,
           role: "ADMIN",
-          organizationId: Organization[0]._id,
+          organizationId: Organization._id,
           tenantId: tenantId,
         };
         // Register the organization Admin
@@ -166,7 +238,7 @@ export const organizationController = {
           );
       } else if (status === "REJECTED") {
         // Send rejection email
-        sendRejectionEmail(Organization[0].organizationEmail);
+        sendRejectionEmail(Organization.organizationEmail);
       }
     } catch (error) {
       logger.error(error);

@@ -1,7 +1,7 @@
 // Import configurations, utilities, and services
 import { responseMessages } from '@config/index';
 import {  generateJwtToken, logger} from '@utils/index';
-import { checkEmailExists, registerUser,getUserByEmail ,getAllUsers} from '@service/v1/index';
+import { checkUserEmailExists, registerUser,getUserByEmail ,getAllUsers} from '@service/v1/index';
 import { Request, Response } from 'express'
 
 // UserController
@@ -11,7 +11,7 @@ export const userController = {
         try {
             const requestData = req.body;
             // Check if email already exists
-            if (await checkEmailExists(requestData.email)) {
+            if (await checkUserEmailExists(requestData.email)) {
                 logger.info("Email Already Exists");
                 return res.status(409).json({
                     hasError: true,

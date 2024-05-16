@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const addressSchema = new mongoose.Schema(
   {
@@ -23,8 +23,8 @@ const addressSchema = new mongoose.Schema(
       required: true,
     },
     country: {
-      type: String,
-      default: "India",
+      type: Schema.Types.ObjectId,
+      ref: "Country",
     },
   },
   {
