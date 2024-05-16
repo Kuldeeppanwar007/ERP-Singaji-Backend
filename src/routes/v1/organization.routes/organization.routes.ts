@@ -11,5 +11,11 @@ import { tanentConnection} from "middlewares";;
 const router = express.Router();
 
 // ROUTES : Register
-router.post("/register", organizationController.registerOrganization);
+router.post(
+  "/register",
+  organizationController.registerOrganization
+);
+router.get("/getall", organizationController.getAllOrganizations);
+router.get("/get/:id", organizationController.getOrganizationById);
+router.put("/verify", organizationController.verifyOrganization);
 export default router;

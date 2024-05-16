@@ -27,8 +27,7 @@ import { addressRoutes, countryRoutes, organizationRoutes, userRoutes } from "@r
 
 // // Initialize database connection
 const url: string = <string>process.env.MONGODB_URI;
-console.log(url);
-mongooseConnection(url + "Singa_Ji_Erp_Master");
+mongooseConnection(url);
 
 app.get("/string", (req,res)=>{
   console.log("called")

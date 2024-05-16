@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 const organizationSchema = new mongoose.Schema(
   {
     organizationName: { type: String, required: true },
+    adminName: { type: String, required: true },
     organizationType: { type: String, required: true },
     organizationEmail: { type: String, required: true, unique: true },
     organizationAddress: { type: String, required: true },
@@ -17,12 +18,16 @@ const organizationSchema = new mongoose.Schema(
     organizationLogo: { type: String, required: true },
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECT"],
+      enum: ["PENDING", "APPROVED", "REJECTED"],
       default: "PENDING",
     },
-    isVerified: {
+    isActive: {
       type: Boolean,
       default: false,
+    },
+    planType: {
+      type: String,
+      enum: ["BASIC", "ADVANCED", "ENTERPRISE"],
     },
     tanentId: {
       type: mongoose.Schema.ObjectId,
@@ -33,7 +38,7 @@ const organizationSchema = new mongoose.Schema(
 );
 
 // Create a Mongoose model from the schema
-const organization = mongoose.model("organization", organizationSchema);
+const Organization = mongoose.model("organization", organizationSchema);
 
 // Export the model for use in other modules
-export default organization;
+export default Organization;

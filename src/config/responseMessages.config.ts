@@ -17,8 +17,10 @@ const responseMessages = {
   DELETED: "Data deleted successfully",
   NOT_DELETED: "Data not deleted !",
   ADDRESS_NOT_FOUND: "Address not found.",
+  ORGANIZATION_VERIFIED: "organization has been successfully verified",
   ADDRESS_UPDATED: "Address updated successfully.",
   ADDRESS_DELETED: "Address deleted successfully.",
+  USER_NOT_CREATED: "User not created",
 };
 
 export default responseMessages;
