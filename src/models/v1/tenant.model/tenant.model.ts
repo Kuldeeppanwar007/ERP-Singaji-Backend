@@ -32,9 +32,8 @@ const tenantSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  
 });
 
 const Tenant = mongoose.model("tenant", tenantSchema);
 
-module.exports = Tenant;
+export default Tenant;

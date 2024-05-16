@@ -21,6 +21,7 @@ export const mongooseConnection = (url: string) => {
     })
     // If there is an error while connecting, log the error to the console
     .catch((err: Error) => {
+      console.log(err)
       // logger.error(err);
     });
 };

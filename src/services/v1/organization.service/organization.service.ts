@@ -40,7 +40,7 @@ export const getOrganizations = async () => {
 export const getOrganizationById = async (_id: string) => {
   try {
     // Geting Organization By ID
-    logger.info("Entered In GetORG By Id");
+    logger.info("Entered In GetORG By Id " + _id);
     const organizationData = await Organization.findById(_id);
     console.log(organizationData);
 

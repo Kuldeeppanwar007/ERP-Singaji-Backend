@@ -142,36 +142,49 @@ export const organizationController = {
     try {
       console.log("Entered");
 
-      const id: any = req.params;
+      const id: string = req.params.id;
       const payload = req.body;
       const { organizationAddress } = payload;
       logger.info(id);
       logger.info(payload);
       // logger.info(organizationAddress);
 
+      // Geting Org By Id
       const organization = await getOrganizationById(id);
+      // Check if Organization is not exists then return
       if (!organization) {
         logger.error(responseMessages.DATA_NOT_FOUND);
         return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
       }
-      console.log(organization);
+      // If Email Are different then also give error and return
+      if (payload?.organizationEmail !== organization.organizationEmail) {
+        logger.error("Can't Not change email");
+        return res.status(400).json(new ApiError(400, "Can Not Change Email"));
+      }
 
-      const updatedOrganization = await updateOrganizationById(id, payload);
+      // Address update Code
+      if (payload?.organizationAddress) {
+        const updatedAddress = await updateAddressById(
+          organization.organizationAddress?._id,
+          payload.organizationAddress
+        );
+      }
 
+      // const updatedOrganization = await updateOrganizationById(id, payload);
       // If no organizations then return data not found
-      if (!updatedOrganization)
-        return res
-          .status(404)
-          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+      // if (!updatedOrganization)
+      //   return res
+      //     .status(404)
+      //     .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
       // Return Response
       return res
         .status(200)
-        .json(
-          new ApiResponse(200, updatedOrganization, responseMessages.DATA_FOUND)
-        );
+        .json
+        // new ApiResponse(200, updatedOrganization, responseMessages.DATA_FOUND)
+        ();
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
