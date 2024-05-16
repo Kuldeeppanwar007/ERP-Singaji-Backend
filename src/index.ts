@@ -23,7 +23,8 @@ import { addressRoutes, countryRoutes, organizationRoutes, userRoutes } from "@r
 
 // // Initialize database connection
 const url: string = <string>process.env.MONGODB_URI;
-mongooseConnection(url);
+const db_name: string = <string>process.env.DB_NAME
+mongooseConnection(`${url}${db_name}`);
 
 app.get("/string", (req,res)=>{
   console.log("called")

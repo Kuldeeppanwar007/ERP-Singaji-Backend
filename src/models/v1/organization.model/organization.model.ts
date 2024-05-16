@@ -13,7 +13,6 @@ const organizationSchema = new mongoose.Schema(
       ref: "Address",
     },
     organizationWebsite: { type: String },
-    contactPersonName: { type: String, required: true },
     organizationPhone: { type: String, required: true },
     affiliations: { type: String },
     organizationRegistrationInfo: { type: String, required: true },

@@ -350,3 +350,42 @@
     ]
 } 
 2024-05-16 12:43:37.622 +0530 [[32minfo[39m]  Email successfully sent to ssism@ssism.org 
+2024-05-16 13:31:54.845 +0530 [[31merror[39m]  Country Not Found 
+2024-05-16 13:32:49.393 +0530 [[31merror[39m]  Parameter "filter" to findOne() must be an object, got "[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]" (type object) ObjectParameterError: Parameter "filter" to findOne() must be an object, got "[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]" (type object)
+    at model.Query.Query.findOne (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\query.js:2597:16)
+    at Function.findOne (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\mongoose\lib\model.js:2201:13)
+    at countryExist (D:\Singaji_ERP\ERP-Singaji-Backend\src\services\v1\country.service\country.service.ts:34:35)
+    at addCountry (D:\Singaji_ERP\ERP-Singaji-Backend\src\controllers\v1\country.controller\country.controller.ts:13:34)
+    at Layer.handle [as handle_request] (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\layer.js:95:5)
+    at D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (D:\Singaji_ERP\ERP-Singaji-Backend\node_modules\express\lib\router\index.js:346:12)
+2024-05-16 13:33:14.695 +0530 [[32minfo[39m]  New Organization Created Successfully ! 
+2024-05-16 13:33:17.129 +0530 [[31merror[39m]  Error sending email: Error: No recipients defined 
+2024-05-16 13:35:46.142 +0530 [[32minfo[39m]  Entered In GetORG By Id 
+2024-05-16 13:35:46.578 +0530 [[32minfo[39m]  Successfully Get Organization 
+2024-05-16 13:35:47.418 +0530 [[32minfo[39m]  Successfully Updated Organizations 
+2024-05-16 13:35:47.474 +0530 [[32minfo[39m]  Organization Verified Successfully 
+2024-05-16 13:35:49.575 +0530 [[32minfo[39m]  Email: aditia.bca2022@ssism.org | Name: Pranjal Dubey 
+2024-05-16 13:35:53.341 +0530 [[32minfo[39m]  {
+    "uid": "umo2aWu9QYfTjAXVLbNuCZAdsY23",
+    "email": "aditia.bca2022@ssism.org",
+    "emailVerified": false,
+    "disabled": false,
+    "metadata": {
+        "lastSignInTime": null,
+        "creationTime": "Thu, 16 May 2024 08:05:52 GMT",
+        "lastRefreshTime": null
+    },
+    "tokensValidAfterTime": "Thu, 16 May 2024 08:05:52 GMT",
+    "providerData": [
+        {
+            "uid": "aditia.bca2022@ssism.org",
+            "email": "aditia.bca2022@ssism.org",
+            "providerId": "password"
+        }
+    ]
+} 
+2024-05-16 13:35:58.175 +0530 [[32minfo[39m]  Email successfully sent to aditia.bca2022@ssism.org 
