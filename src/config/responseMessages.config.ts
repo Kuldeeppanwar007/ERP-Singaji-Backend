@@ -6,6 +6,23 @@ const responseMessages = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   ORGANIZATION_CREATED_SUCCESSFULLY: "Organization created successfully",
   ORGANIZATION_NOTCREATED: "Organization not created",
+  CREATED: "Created successfully !",
+  NOT_CREATED: "Not created !",
+  DATA_NOT_FOUND: "Data not found !",
+  ALL_DATA_FOUND: "All data found !",
+  DATA_FOUND: "Data found !",
+  MISSING_FIELDS: "Fields are missing !",
+  NOT_UPDATED: "Data not updated !",
+  DATA_UPDATED: "Data updated !",
+  DELETED: "Data deleted successfully",
+  NOT_DELETED: "Data not deleted !",
+  ADDRESS_NOT_FOUND: "Address not found.",
+  ORGANIZATION_VERIFIED: "organization has been successfully verified",
+  ADDRESS_UPDATED: "Address updated successfully.",
+  ADDRESS_DELETED: "Address deleted successfully.",
+  USER_NOT_CREATED: "User not created",
+  COUNTRY_NOT_FOUND: "Country not found !",
+  COUNTRY_CREATED: "Country created successfully !",
 };
 
 export default responseMessages;

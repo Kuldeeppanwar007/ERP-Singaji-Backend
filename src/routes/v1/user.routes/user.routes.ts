@@ -16,4 +16,4 @@ router.post('/login', userController.loginUser)
 // // ROUTES : AllUsers
 router.get('/getUsers', userController.getUsers)
 
-export  {router as userRouter};
+export default router;

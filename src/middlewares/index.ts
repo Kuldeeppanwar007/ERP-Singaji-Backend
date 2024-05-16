@@ -7,5 +7,5 @@ import {rateLimitMiddleware} from  './rateLimitter.middleware'
 // Export Middlewares
 export {
     verifyToken,
-    rateLimitMiddleware
+    rateLimitMiddleware,
 }

@@ -1,4 +1,5 @@
-export interface Organization{
+export interface organization{
+    organizationId: string,
     organizationName: string,
     organizationType:string,
     organizationEmail: string,
@@ -9,5 +10,8 @@ export interface Organization{
     organizationRegistrationInfo:string,
     organizationVision: string,
     socialMediaProfiles: string,
-    organizationLogo: string
+    organizationLogo: string,
+    status: string,
+    tenantId: string,
+    tenantName: string
 }
