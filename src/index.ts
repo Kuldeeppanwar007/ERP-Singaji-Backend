@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import utilities
-import { mongooseConnection } from "../src/utils/index";
+import { logger, mongooseConnection } from "../src/utils/index";
 
 // Import Middleware
 import { rateLimitMiddleware } from 'middlewares';
@@ -41,5 +41,5 @@ const port = process.env.PORT || 3000;
 
 // Listening Server
 app.listen(port, () => {
-  console.log(`🚀 App Started: http://localhost:${port}`);
+  logger.info(`🚀 App Started: http://localhost:${port}`);
 });

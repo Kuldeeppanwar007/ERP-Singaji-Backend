@@ -2,13 +2,11 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
-import {logger} from '@utils/index'
+import { logger } from "@utils/index";
 // Import Utilities
 
 // Define a function to connect to MongoDB using mongoose
 export const mongooseConnection = (url: string) => {
-  console.log(url);
-
   // Set strictQuery to true to enable strict mode
   mongoose.set("strictQuery", true);
 
@@ -16,13 +14,11 @@ export const mongooseConnection = (url: string) => {
   mongoose
     .connect(url)
     .then(() => {
-      console.log("Connected");
-      // logger.info("Connected to Database");
+      logger.info("🔗 Connected to Database ");
     })
     // If there is an error while connecting, log the error to the console
     .catch((err: Error) => {
-      console.log(err)
-      // logger.error(err);
+      logger.error(err);
     });
 };
 

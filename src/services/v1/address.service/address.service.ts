@@ -69,7 +69,7 @@ export const getAllAddresses = async () => {
 
 // Define a function for updating an address by ID
 export const updateAddressById = async (
-  addressId: ObjectId | undefined,
+  addressId: string|undefined,
   updatedData: object
 ) => {
   try {

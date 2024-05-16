@@ -145,13 +145,14 @@ export const organizationController = {
 
       const id: string = req.params.id;
       const payload = req.body;
-      const { organizationAddress } = <organization>payload;
+      const { organizationAddress } = payload;
       logger.info(id);
       logger.info(payload);
       // logger.info(organizationAddress);
 
       // Geting Org By Id
       const organization = await getOrganizationById(id);
+      logger.info(organization);
       // Check if Organization is not exists then return
       if (!organization) {
         logger.error(responseMessages.DATA_NOT_FOUND);
@@ -159,30 +160,26 @@ export const organizationController = {
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
       }
-      // If Email Are different then also give error and return
-      // if (payload?.organizationEmail == organization.organizationEmail) {
-      //   logger.error("Can't Not change email");
-      //   return res.status(400).json(new ApiError(400, "Can Not Change Email"));
-      // }
 
       // Address update Code
       if (payload?.organizationAddress) {
-        // const updatedAddress = await updateAddressById(
-        //   organization.organizationAddress,
-        //   payload.organizationAddress
-        // );
-        // if (organization.organizationAddress) {
+        const addressId = organization.organizationAddress?.toString();
+        console.log(addressId);
 
-        // }
-        console.log(
-          organization.organizationAddress,
-          payload.organizationAddress.country
+        const updatedAddress = await updateAddressById(
+          addressId,
+          payload.organizationAddress
         );
-
-        // const updatedAddress=await updateAddressById()
+        if (!updatedAddress) {
+          logger.error("Address Not Update");
+          return res
+            .status(400)
+            .json(new ApiError(400, responseMessages.NOT_UPDATED));
+        }
+        payload.organizationAddress = updatedAddress._id;
       }
 
-      // const updatedOrganization = await updateOrganizationById(id, payload);
+      const updatedOrganization = await updateOrganizationById(id, payload);
       // If no organizations then return data not found
       // if (!updatedOrganization)
       //   return res
