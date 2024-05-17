@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   registerUser,
   getUserByEmail,
-  checkEmailExists,
+  checkOrgEmailExists,
   getAllUsers,
   updateUser,
   deleteUser,
@@ -18,7 +18,7 @@ export const userController = {
     try {
       const requestData = req.body as UserCreateInput;
       // Check if email already exists
-      if (await checkEmailExists(requestData.email)) {
+      if (await checkOrgEmailExists(requestData.email)) {
         logger.info("Email Already Exists");
         return res.json(new ApiResponse(409, responseMessages.EMAIL_EXISTS));
       }

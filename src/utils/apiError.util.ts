@@ -3,7 +3,7 @@ class ApiError extends Error {
   public data: any | null;
   public success: boolean;
   public error: Error[];
-
+  public message: string;
   constructor(
     statusCode: number,
     message = "Something went wrong",

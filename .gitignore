@@ -2,3 +2,8 @@
 node_modules
 dist
 src/config/serviceAccount.json
+info.log
+/*.log
+*.log
+
+

@@ -1,0 +1,8 @@
+2024-05-16T05:48:18.231Z [info] Successfully Get All Organizations reqId: 5c6cd352-8e43-46ec-9c29-7ad6bd6c06f4
+2024-05-16T05:48:18.247Z [http] GET /api/v1/organization/getAll 200 3037 - 135.291 ms reqId: 5c6cd352-8e43-46ec-9c29-7ad6bd6c06f4
+2024-05-16T06:38:36.464Z [http] GET /api/v1/organization/getAll 404 165 - 7.078 ms reqId: a170e49d-ba35-458c-8cdf-f7820aa1a7f6
+2024-05-16T06:39:02.874Z [info] Successfully Get All Organizations reqId: 0d0572bd-0063-4798-ac88-403c390c7b83
+2024-05-16T06:39:03.017Z [http] GET /api/v1/organization/getOrganizations 200 2867 - 718.127 ms reqId: 0d0572bd-0063-4798-ac88-403c390c7b83
+2024-05-16T06:42:53.023Z [error] Cannot populate path `address` because it is not in your schema. Set the `strictPopulate` option to false to override. reqId: a072cf4d-7fd1-496b-afb1-a2cfbe25190a
+2024-05-16T06:45:46.947Z [info] Successfully Get All Organizations reqId: 8c257b06-c3af-45a0-9c3f-e970a6dd09d2
+2024-05-16T06:45:47.479Z [http] GET /api/v1/organization/getOrganizations 200 2867 - 879.602 ms reqId: 8c257b06-c3af-45a0-9c3f-e970a6dd09d2

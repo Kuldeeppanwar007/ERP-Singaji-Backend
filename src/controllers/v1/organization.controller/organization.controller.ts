@@ -1,13 +1,17 @@
 // Import Services, Configerations
 import {
-  checkIfEmailExists,
+  checkOrgEmailExists,
   registerOrganization,
-  getAllOrganization,
+  getOrganizations,
   registerOrganizationAdmin,
   updateOrganizationById,
   getOrganizationById,
   sendVerificationEmail,
   sendRejectionEmail,
+  getCountry,
+  registerUser,
+  createAddress,
+  updateAddressById,
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
@@ -16,34 +20,60 @@ import { organization } from "@dto/organization.dto";
 import { Tenant } from "@models/v1/tenant.model/tenant.model";
 // Define a controllers
 export const organizationController = {
-  // Define a function for creating an organization
+  
+  // FUNCTION: Create an organization and send email to the superadmin
   registerOrganization: async (req: Request, res: Response) => {
     try {
       // Get the organization data from the request body
       const organizationData = req.body;
 
       // Check if the email already exists
-      const emailExists = await checkIfEmailExists(
+      const emailExists = await checkOrgEmailExists(
         organizationData.organizationEmail
       );
 
       // Check and Return if exits
-      if (emailExists)
+      if (emailExists) {
+        logger.error("Email already exists");
         return res
           .status(400)
           .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
+      }
+      // Get Country's ObjectId
+      const country = await getCountry(
+        organizationData.organizationAddress.country
+      );
+      // Check country are exists or not
+      if (!country) {
+        logger.error("Country Not Found");
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.COUNTRY_NOT_FOUND));
+      }
+      // if Country are an object then get {_id} from this object and set into address's country
+      if (typeof country === "object") {
+        organizationData.organizationAddress.country = country._id;
+      }
+
+      // Store Address in Address collection
+      const newAddress = await createAddress(
+        organizationData.organizationAddress
+      );
+      if (typeof newAddress === "object") {
+        organizationData.organizationAddress = newAddress._id;
+      }
       // Create the organization
       const newOrganization = await registerOrganization(organizationData);
 
       if (!newOrganization)
-        res
+        return res
           .status(400)
           .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
 
       logger.info("New Organization Created Successfully !");
 
       // Send a response with the new organization
-      res
+      return res
         .status(201)
         .json(
           new ApiResponse(
@@ -55,15 +85,48 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
+
+  // FUNCTION: Verify the organization by superadmin
+  // verifyOrganization: async(req:Request, res: Response)=>{
+  //   try{
+
+  //     const _id = req.params.id
+  //     const requestBody = req.body
+
+
+  //     const organization: any = await verifyOrganization(_id, requestBody)
+
+  //     console.log(organization.organizationEmail)
+
+  //     const tempPass: string = generatePassword(20);
+
+  //     const user = admin.auth().createUser({
+  //       email: organization.organizationEmail,
+  //       password:tempPass,
+  //       emailVerified: false,
+  //       disabled: false 
+  //     })
+
+  // return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
+
+  //   }catch(error){
+  //     logger.error(error);
+  //     res
+  //       .status(500)
+  //       .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+  //   }
+
+
+  // },
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
       // Getting All Organizations
-      const allOrganizations = await getAllOrganization();
+      const allOrganizations = await getOrganizations();
       console.log(allOrganizations);
 
       // If no organizations then return data not found
@@ -115,7 +178,7 @@ export const organizationController = {
 
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName }: organization = req.body;
+      const { organizationId, status, tenantName }  = <organization>req.body;
 
       const tenant = await Tenant.findOne({ tenantName: tenantName });
       const tenantId = tenant ? tenant._id : null;
@@ -141,11 +204,11 @@ export const organizationController = {
         // create organization admin
         const temporaryPassword: string = generatePassword(10);
         const user = {
-          name: Organization[0].adminName,
-          email: Organization[0].organizationEmail,
+          name: Organization.adminName,
+          email: Organization.organizationEmail,
           password: temporaryPassword,
           role: "ADMIN",
-          organizationId: Organization[0]._id,
+          organizationId: Organization._id,
           tenantId: tenantId,
         };
         // Register the organization Admin
@@ -166,7 +229,7 @@ export const organizationController = {
           );
       } else if (status === "REJECTED") {
         // Send rejection email
-        sendRejectionEmail(Organization[0].organizationEmail);
+        sendRejectionEmail(Organization.organizationEmail);
       }
     } catch (error) {
       logger.error(error);

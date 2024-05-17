@@ -3,7 +3,16 @@ import jwt, { Secret } from "jsonwebtoken";
 import { logger } from "@utils/index";
 // import userService from "@services/user.service.js";
 import {Request,Response,NextFunction} from 'express'
+import { UUID } from "crypto";
 
+declare global {
+    namespace Express{
+        interface Request{
+            requestId?: UUID
+            
+        }
+    }
+}
 // Middleware: Verify Token
 const verifyToken = async (req:Request, res:Response, next: NextFunction) => {
     try {

@@ -31,7 +31,7 @@ export async function getUserByEmail(email: string) {
 }
 
 // Function: Check Email Exists
-export async function checkEmailExists(email: string) {
+export async function checkUserEmailExists(email: string) {
   try {
     const user = await User.findOne({ email });
     logger.info("Email check completed !");
