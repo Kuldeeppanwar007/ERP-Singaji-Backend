@@ -1,5 +1,5 @@
 // Import the organization model
-import { Organization, User } from "@models/v1/index";
+import { Organization } from "@models/v1/index";
 import { organization } from "dto/organization.dto";
 import { signupUser } from "middlewares/userAuth.middleware";
 import { registerUser } from "@service/v1/index";
@@ -35,6 +35,8 @@ export const registerOrganization = async (organizationData: organization) => {
   `,
     });
 
+    logger.info("New Organization Created Successfully !");
+
     // Return the saved organization
     return savedOrganization;
   } catch (error) {
@@ -47,7 +49,7 @@ export const registerOrganization = async (organizationData: organization) => {
 export const getOrganizations = async () => {
   try {
     // Geting All Organizations
-    const allOrganizations = await Organization.find()
+    const allOrganizations = await Organization.find();
     // If No Organizations then return false
     if (!allOrganizations || allOrganizations.length == 0) return false;
     // Return All organizations
