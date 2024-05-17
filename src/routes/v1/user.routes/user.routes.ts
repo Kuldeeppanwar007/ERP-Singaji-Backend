@@ -7,13 +7,19 @@ import { userController } from '@controllers/v1/index'
 // Create Router
 const router = express.Router();
 
-// ROUTES : RegisterUser
+// Register User
 router.post('/register', userController.registerUser)
 
-// // ROUTES : LoginUser
-router.post('/login', userController.loginUser)
+// get user by email
+router.post('/get:email', userController.getUserByEmail)
 
-// // ROUTES : AllUsers
-router.get('/getUsers', userController.getUsers)
+// GET AllUsers
+router.get('/getUsers', userController.getAllUsers)
+
+// update user
+router.get('/update:id', userController.getAllUsers)
+
+// delete user
+router.get('/delete:id', userController.getAllUsers)
 
 export default router;

@@ -1,9 +1,11 @@
 import * as admin from "firebase-admin";
 import { logger } from "@utils/logger.util";
 import Admin from "@config/firebase.config";
+import { Request, Response, NextFunction } from "express";
 
 Admin.initializeApp;
 
+// signup user
 export const signupUser = async (email: string, password: string) => {
   try {
     // Create a new user
@@ -19,54 +21,22 @@ export const signupUser = async (email: string, password: string) => {
     return false;
   }
 };
-// registerUser("goutamyadav2606@gmail.com", "123456");
 
-// reset password
-// export const resetPassword = async (email: string) => {
-//   try {
-//     const actionCodeSettings = {
-//       url: "http://localhost:3000/reset-password",
-//       handleCodeInApp: true,
-//     };
-
-//     const link = await admin
-//       .auth()
-//       .generatePasswordResetLink(email, actionCodeSettings);
-//     console.log(link);
-
-//     return link;
-//   } catch (error) {
-//     logger.error(error);
-//     return false;
-//   }
-// };
-
-// resetPassword("rajputnik911@gmail.com");
-// // login user with
-// export const loginUser = async (email: string, password: string) => {
-//   try {
-//     const user = await admin.auth().signInWithEmailAndPassword(email, password);
-//     return user;
-//   } catch (error) {
-//     logger.error(error);
-//     return false;
-//   }
-// };
-
-// loginUser("rajputnik911@gmail.com", "123456");
-
-// export const SignInWithEmailLink = async (email: string, url: string) => {
-//   try {
-//     const user = await admin.auth().generateSignInWithEmailLink(email, { url });
-//     console.log(user);
-
-//     return user;
-//   } catch (error) {
-//     logger.error(error);
-//     return false;
-//   }
-// };
-// SignInWithEmailLink(
-//   "rajputnik911@gmail.com",
-//   "htpp://localhost:500/api/v1/user/login"
-// );
+const verifyUserLogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // Get the user login token from the request
+  const token = req.headers.authorization ?? "";
+  // Verify the token
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    // Token is valid, proceed with login
+    res.json({ message: "Login successful" });
+    next();
+  } catch (error) {
+    // Token is invalid, handle error
+    res.status(401).json({ message: "Invalid login token" });
+  }
+};

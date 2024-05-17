@@ -7,3 +7,11 @@ admin.initializeApp({
 });
 
 export default admin;
+
+export function initializeApp() {
+  throw new Error("Function not implemented.");
+}
+export function auth() {
+  throw new Error("Function not implemented.");
+}
+
