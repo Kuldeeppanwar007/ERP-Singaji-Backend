@@ -35,6 +35,7 @@ const organizationSchema = new mongoose.Schema(
     planType: {
       type: String,
       enum: ["BASIC", "ADVANCED", "ENTERPRISE"],
+      required: true,
     },
     tanentId: {
       type: Schema.Types.ObjectId,

@@ -15,9 +15,9 @@ router.put("/verify", organizationController.verifyOrganization);
 router.post("/register", organizationController.registerOrganization);
 router.get("/getOrganizations", organizationController.getAllOrganizations);
 router.get("/getOrganization/:id", organizationController.getOrganizationById);
-// router.patch(
-//   "/updateOrganization/:id",
-//   organizationController.updateOrganization
-// );
+router.patch(
+  "/updateOrganization/:id",
+  organizationController.updateOrganization
+);
 // ROUTES : END
 export default router;

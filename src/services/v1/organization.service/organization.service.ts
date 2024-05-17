@@ -47,7 +47,8 @@ export const registerOrganization = async (organizationData: organization) => {
 export const getOrganizations = async () => {
   try {
     // Geting All Organizations
-    const allOrganizations = await Organization.find()
+    const allOrganizations = await Organization.find({});
+
     // If No Organizations then return false
     if (!allOrganizations || allOrganizations.length == 0) return false;
     // Return All organizations
@@ -79,10 +80,12 @@ export const getOrganizationById = async (_id: string) => {
 export const updateOrganizationById = async (_id: string, payload: object) => {
   try {
     // Update Organization
-    const updatedOrganization = await Organization.findByIdAndUpdate({
-      _id,
+    const updatedOrganization = await Organization.findByIdAndUpdate(
+      { _id },
       payload,
-    });
+      { new: true }
+    );
+
     // If No organization then return false
     if (!updatedOrganization) return false;
     // Return updated organizations

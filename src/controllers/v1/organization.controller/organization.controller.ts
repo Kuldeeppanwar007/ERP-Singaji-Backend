@@ -15,12 +15,17 @@ import {
 } from "@service/v1/index";
 import { responseMessages } from "@config/index";
 import { Request, Response } from "express";
-import { generatePassword, logger, ApiError, ApiResponse } from "@utils/index";
+import {
+  generatePassword,
+  logger,
+  ApiError,
+  ApiResponse,
+  sendMail,
+} from "@utils/index";
 import { organization } from "@dto/organization.dto";
 import { Tenant } from "@models/v1/tenant.model/tenant.model";
 // Define a controllers
 export const organizationController = {
-  
   // FUNCTION: Create an organization and send email to the superadmin
   registerOrganization: async (req: Request, res: Response) => {
     try {
@@ -72,6 +77,113 @@ export const organizationController = {
 
       logger.info("New Organization Created Successfully !");
 
+      // Send Mail Of Successfully Registration
+      const status = sendMail({
+        from: `<${process.env.EMAIL_USER}>`,
+        to: process.env.SUPER_ADMIN_EMAIL,
+        subject: "Organization Registeration",
+        html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Organization Registration Confirmation</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border: 1px solid #dddddd;
+                    border-radius: 5px;
+                }
+                h1 {
+                    text-align: center;
+                    color: #333333;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                }
+                table, th, td {
+                    border: 1px solid #dddddd;
+                }
+                th, td {
+                    padding: 12px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 20px;
+                    color: #777777;
+                    font-size: 12px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>New Organization Registration</h1>
+                <p>Dear Super Admin,</p>
+                <p>A new organization has been registered. Here are the details:</p>
+                <table>
+                    <tr>
+                        <th>Organization Name</th>
+                        <td><strong>${organizationData.organizationName}<strong/></td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td><strong>${organizationData.organizationEmail}<strong/></td>
+                    </tr>
+                    <tr>
+                        <th>Plan Type</th>
+                        <td>${organizationData.planType}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <td>${organizationData.organizationPhone}</td>
+                    </tr>
+                    <tr>
+                        <th>Website</th>
+                        <td>${organizationData.organizationWebsite}</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>${organizationData.organizationAddress.city}</td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>${organizationData.organizationType}</td>
+                    </tr>
+                    <tr>
+                        <th>Admin Name</th>
+                        <td>${organizationData.adminName}</td>
+                    </tr>
+                </table>
+                <p>If you have any questions, feel free to contact us.</p>
+                <p>Best Regards,<br>Singa ji</p>
+                <div class="footer">
+                    &copy; 2024 Your Company. All rights reserved.
+                </div>
+            </div>
+        </body>
+        </html>
+        
+      `,
+      });
+      if (!status) {
+        logger.error("Mail Not send");
+      }
       // Send a response with the new organization
       return res
         .status(201)
@@ -90,48 +202,14 @@ export const organizationController = {
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
-
-  // FUNCTION: Verify the organization by superadmin
-  // verifyOrganization: async(req:Request, res: Response)=>{
-  //   try{
-
-  //     const _id = req.params.id
-  //     const requestBody = req.body
-
-
-  //     const organization: any = await verifyOrganization(_id, requestBody)
-
-  //     console.log(organization.organizationEmail)
-
-  //     const tempPass: string = generatePassword(20);
-
-  //     const user = admin.auth().createUser({
-  //       email: organization.organizationEmail,
-  //       password:tempPass,
-  //       emailVerified: false,
-  //       disabled: false 
-  //     })
-
-  // return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
-
-  //   }catch(error){
-  //     logger.error(error);
-  //     res
-  //       .status(500)
-  //       .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
-  //   }
-
-
-  // },
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
       // Getting All Organizations
       const allOrganizations = await getOrganizations();
-      console.log(allOrganizations);
 
       // If no organizations then return data not found
       if (!allOrganizations)
-        res
+        return res
           .status(404)
           .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
@@ -144,7 +222,7 @@ export const organizationController = {
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
-      res
+      return res
         .status(500)
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
@@ -178,17 +256,13 @@ export const organizationController = {
   },
   updateOrganization: async (req: Request, res: Response) => {
     try {
-      console.log("Entered");
-
       const id: string = req.params.id;
       const payload = req.body;
-      const { organizationAddress } = payload;
-      logger.info(id);
-      logger.info(payload);
-      // logger.info(organizationAddress);
+      console.log(payload);
 
       // Geting Org By Id
       const organization = await getOrganizationById(id);
+
       logger.info(organization);
       // Check if Organization is not exists then return
       if (!organization) {
@@ -207,6 +281,7 @@ export const organizationController = {
           addressId,
           payload.organizationAddress
         );
+        // Check If Address not update
         if (!updatedAddress) {
           logger.error("Address Not Update");
           return res
@@ -215,20 +290,89 @@ export const organizationController = {
         }
         payload.organizationAddress = updatedAddress._id;
       }
-
+      // Update Organization
       const updatedOrganization = await updateOrganizationById(id, payload);
-      // If no organizations then return data not found
-      // if (!updatedOrganization)
-      //   return res
-      //     .status(404)
-      //     .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
-      // Return Response
+      // Check If Organization not updated
+      if (!updatedOrganization) {
+        return res
+          .status(400)
+          .json(new ApiError(400, responseMessages.NOT_UPDATED));
+      }
+      // If organization update then a mail goes to Organization Admin
+      // Send Mail Of Successfully Registration
+      const status = sendMail({
+        from: `<${process.env.EMAIL_USER}>`,
+        to: process.env.SUPER_ADMIN_EMAIL,
+        subject: "Organization Registeration",
+        html: `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Organization Update</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border: 1px solid #dddddd;
+                    border-radius: 5px;
+                }
+                h1 {
+                    text-align: center;
+                    color: #333333;
+                }
+                h2 {
+                    text-align: center;
+                    color: #007BFF;
+                    margin-top: 0;
+                }
+                p {
+                    line-height: 1.6;
+                    color: #555555;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 20px;
+                    color: #777777;
+                    font-size: 12px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Organization Update</h1>
+                <h2>${organization.organizationName}</h2>
+                <p>Dear Admin,${organization.adminName} ,</p>
+                <p>We would like to inform you that there have been updates to your organization</p>
+                <p>If you have any questions, feel free to contact us.</p>
+                <p>Best Regards,<br>Singa ji</p>
+                <div class="footer">
+                    &copy; 2024 Your Company. All rights reserved.
+                </div>
+            </div>
+        </body>
+        </html>
+        `,
+      });
+      // Send Response
       return res
         .status(200)
-        .json
-        // new ApiResponse(200, updatedOrganization, responseMessages.DATA_FOUND)
-        ();
+        .json(
+          new ApiResponse(
+            201,
+            updatedOrganization,
+            responseMessages.DATA_UPDATED
+          )
+        );
     } catch (error) {
       // If an error occurred, send a response with the error message
       logger.error(error);
@@ -240,7 +384,7 @@ export const organizationController = {
 
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName }  = <organization>req.body;
+      const { organizationId, status, tenantName } = <organization>req.body;
 
       const tenant = await Tenant.findOne({ tenantName: tenantName });
       const tenantId = tenant ? tenant._id : null;
@@ -275,7 +419,7 @@ export const organizationController = {
         };
         // Register the organization Admin
         const User = await registerOrganizationAdmin(user);
-        
+
         // send email to organization admin
         await sendVerificationEmail(user);
 
