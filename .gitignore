@@ -6,4 +6,6 @@ info.log
 /*.log
 *.log
 
+logs
 
+logs/**.json
