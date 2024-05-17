@@ -12,15 +12,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    password: { salt: String, hash: String },
+    isVerified: { type: Boolean, default: false },
     role: {
-      type: String,
-      enum: ["STUDENT", "FACULTY", "SUPERADMIN", "ADMIN"],
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Role",
     },
     organizationId: {
       type: Schema.Types.ObjectId,
-      ref: "organization",
+      ref: "Organization",
     },
     tenantId: {
       type: Schema.Types.ObjectId,
@@ -38,6 +37,5 @@ const userSchema = new mongoose.Schema(
 );
 
 // Create a user model
-const user = mongoose.model("user", userSchema);
+export const User = mongoose.model("user", userSchema);
 
-export default user;

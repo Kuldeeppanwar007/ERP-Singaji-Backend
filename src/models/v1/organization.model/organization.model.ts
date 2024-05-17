@@ -45,7 +45,5 @@ const organizationSchema = new mongoose.Schema(
 );
 
 // Create a Mongoose model from the schema
-const Organization = mongoose.model("organization", organizationSchema);
+export const Organization = mongoose.model("organization", organizationSchema);
 
-// Export the model for use in other modules
-export default Organization;

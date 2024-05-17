@@ -13,7 +13,9 @@ export const responseMessages = {
   USERS_FETCHED_SUCCESSFULLY: "Users fetched successfully",
   USER_UPDATED_SUCCESSFULLY: "User updated successfully",
   USER_DELETED_SUCCESSFULLY: "User deleted successfully",
-
+  ROLE_CREATED_SUCCESSFULLY: "Role created successfully",
+  ROLES_FETCHED_SUCCESSFULLY: "Roles fetched successfully",
+  ORGANIZATION_VERIFIED: "Organization verified successfully",
   // Error messages
   INCORRECT_PASSWORD: "Incorrect Password",
   USER_NOT_FOUND: "User Not Found!",
@@ -32,4 +34,5 @@ export const responseMessages = {
   FAILED_TO_GET_ALL_USERS: "Failed to get all users",
   FAILED_TO_UPDATE_USER: "Failed to update user",
   FAILED_TO_DELETE_USER: "Failed to delete user",
+  COUNTRY_NOT_FOUND: "Country not found",
 };

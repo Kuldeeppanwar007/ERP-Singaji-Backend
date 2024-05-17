@@ -18,4 +18,4 @@ router.patch('/updateAddress/:id', addressController.updateAddress);
 // Delete Address
 router.delete('/deleteAddress/:id', addressController.deleteAddress);
 
-export default router;
+export  {router as addressRoutes};

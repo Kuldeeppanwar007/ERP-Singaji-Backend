@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { addCountry, countryExist } from "@service/v1/index";
 import { Country } from "@models/v1/index";
-import responseMessages from "@config/responseMessages.config";
+import {responseMessages} from "@config/responseMessages.config";
 import { logger } from "@utils/index";
 
 export const countryController = {

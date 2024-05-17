@@ -19,7 +19,7 @@ export const signupUser = async (email: string, password: string) => {
     return false;
   }
 };
-// registerUser("goutamyadav2606@gmail.com", "123456");
+// registerUser("rajputnik911@gmail.com", "123456");
 
 // reset password
 // export const resetPassword = async (email: string) => {

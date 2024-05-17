@@ -27,7 +27,7 @@ export const userController = {
       logger.info(`User Registered Successfully! ${user}`);
 
       return res.json(
-        new ApiResponse(200, responseMessages.USER_REGISTERED_SUCCESSFULLY)
+        new ApiResponse(200, responseMessages.USER_REGISTERED_SUCCESSFULLY,user)
       );
     } catch (error) {
       logger.error(error);
@@ -43,7 +43,7 @@ export const userController = {
       const email = req.params.email;
       const user = await getUserByEmail(email);
       return res.json(
-        new ApiResponse(200, responseMessages.USER_FETCHED_SUCCESSFULLY)
+        new ApiResponse(200, responseMessages.USER_FETCHED_SUCCESSFULLY,user)
       );
     } catch (error) {
       logger.error(error);
@@ -57,8 +57,9 @@ export const userController = {
   getAllUsers: async (req: Request, res: Response) => {
     try {
       const users = await getAllUsers();
+      if(!users) return;
       return res.json(
-        new ApiResponse(200, responseMessages.USERS_FETCHED_SUCCESSFULLY)
+        new ApiResponse(200, responseMessages.USERS_FETCHED_SUCCESSFULLY,users)
       );
     } catch (error) {
       logger.error(error);
@@ -75,7 +76,7 @@ export const userController = {
       const payload = req.body;
       const updatedUser = await updateUser(userId, payload);
       return res.json(
-        new ApiResponse(200, responseMessages.USER_UPDATED_SUCCESSFULLY)
+        new ApiResponse(200, responseMessages.USER_UPDATED_SUCCESSFULLY,updatedUser)
       );
     } catch (error) {
       logger.error(error);
@@ -91,7 +92,7 @@ export const userController = {
       const userId = req.params.userId;
       const deletedUser = await deleteUser(userId);
       return res.json(
-        new ApiResponse(200, responseMessages.USER_DELETED_SUCCESSFULLY)
+        new ApiResponse(200, responseMessages.USER_DELETED_SUCCESSFULLY,deletedUser)
       );
     } catch (error) {
       logger.error(error);

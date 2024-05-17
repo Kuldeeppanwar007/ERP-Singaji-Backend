@@ -20,7 +20,6 @@ import { organization } from "@dto/organization.dto";
 import { Tenant } from "@models/v1/tenant.model/tenant.model";
 // Define a controllers
 export const organizationController = {
-  
   // FUNCTION: Create an organization and send email to the superadmin
   registerOrganization: async (req: Request, res: Response) => {
     try {
@@ -65,21 +64,20 @@ export const organizationController = {
       // Create the organization
       const newOrganization = await registerOrganization(organizationData);
 
-      if (!newOrganization)
+      if (!newOrganization) {
         return res
           .status(400)
           .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
-
-      logger.info("New Organization Created Successfully !");
-
+      }
+      
       // Send a response with the new organization
       return res
         .status(201)
         .json(
           new ApiResponse(
             201,
-            newOrganization,
-            responseMessages.ORGANIZATION_CREATED_SUCCESSFULLY
+            responseMessages.ORGANIZATION_CREATED_SUCCESSFULLY,
+            newOrganization
           )
         );
     } catch (error) {
@@ -98,7 +96,6 @@ export const organizationController = {
   //     const _id = req.params.id
   //     const requestBody = req.body
 
-
   //     const organization: any = await verifyOrganization(_id, requestBody)
 
   //     console.log(organization.organizationEmail)
@@ -109,7 +106,7 @@ export const organizationController = {
   //       email: organization.organizationEmail,
   //       password:tempPass,
   //       emailVerified: false,
-  //       disabled: false 
+  //       disabled: false
   //     })
 
   // return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
@@ -120,7 +117,6 @@ export const organizationController = {
   //       .status(500)
   //       .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
   //   }
-
 
   // },
   getAllOrganizations: async (req: Request, res: Response) => {
@@ -139,7 +135,7 @@ export const organizationController = {
       return res
         .status(200)
         .json(
-          new ApiResponse(200, allOrganizations, responseMessages.DATA_FOUND)
+          new ApiResponse(200, responseMessages.DATA_FOUND, allOrganizations)
         );
     } catch (error) {
       // If an error occurred, send a response with the error message
@@ -165,7 +161,7 @@ export const organizationController = {
       return res
         .status(200)
         .json(
-          new ApiResponse(200, allOrganizations, responseMessages.DATA_FOUND)
+          new ApiResponse(200, responseMessages.DATA_FOUND, allOrganizations)
         );
     } catch (error) {
       // If an error occurred, send a response with the error message
@@ -178,7 +174,7 @@ export const organizationController = {
 
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName }  = <organization>req.body;
+      const { organizationId, status, tenantName } = <organization>req.body;
 
       const tenant = await Tenant.findOne({ tenantName: tenantName });
       const tenantId = tenant ? tenant._id : null;
@@ -199,8 +195,6 @@ export const organizationController = {
 
         if (!updatedOrganization) return false;
 
-        logger.info("Organization Verified Successfully");
-
         // create organization admin
         const temporaryPassword: string = generatePassword(10);
         const user = {
@@ -213,29 +207,26 @@ export const organizationController = {
         };
         // Register the organization Admin
         const User = await registerOrganizationAdmin(user);
-        
+
         // send email to organization admin
         await sendVerificationEmail(user);
 
         // Return success response
-        return res
-          .status(200)
-          .json(
-            new ApiResponse(
-              200,
-              { updatedOrganization, User },
-              responseMessages.ORGANIZATION_VERIFIED
-            )
-          );
+        return res.json(
+          new ApiResponse(200, responseMessages.ORGANIZATION_VERIFIED, {
+            updatedOrganization,
+            User,
+          })
+        );
       } else if (status === "REJECTED") {
         // Send rejection email
         sendRejectionEmail(Organization.organizationEmail);
       }
     } catch (error) {
       logger.error(error);
-      res
-        .status(500)
-        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+      return res.json(
+        new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR)
+      );
     }
   },
 };

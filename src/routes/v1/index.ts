@@ -1,12 +1,11 @@
+export * from "./organization.routes/organization.routes";
 
-import  organizationRoutes from './organization.routes/organization.routes'
-import  userRoutes  from './user.routes/user.routes'
-import addressRoutes from './address.routes/address.routes'
-import { countryRoutes } from './country.routes/country.routes'
+export * from "./user.routes/user.routes";
 
-export{
-    userRoutes,
-    organizationRoutes,
-    addressRoutes,
-    countryRoutes
-}
+export * from "./address.routes/address.routes";
+
+export * from "./country.routes/country.routes";
+
+export * from "./tenant.routes/tenant.routes";
+
+export * from "./role.routes//role.routes";
