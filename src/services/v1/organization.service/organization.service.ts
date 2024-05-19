@@ -15,26 +15,6 @@ export const registerOrganization = async (organizationData: organization) => {
     // Save the organization to the database
     const savedOrganization = await newOrganization.save();
 
-    // send the organization request email
-    sendMail({
-      from: `<${newOrganization.organizationEmail}>`,
-      to: process.env.SUPERADMIN_EMAIL,
-      subject: "New Organization Request",
-      html: `
-    <div style="background-color: #f8f9fa; padding: 30px;">
-      <h2 style="color: #6c757d;">New Organization Request</h2>
-      <hr />
-      <p style="font-size: 18px; color: #6c757d;">
-        A new organization named <strong>${newOrganization.organizationName}</strong> has requested to join.
-      </p>
-      <hr />
-      <p style="font-size: 16px; color: #6c757d;">
-        Please review the request and take the necessary actions.
-      </p>
-    </div>
-  `,
-    });
-
     // Return the saved organization
     return savedOrganization;
   } catch (error) {

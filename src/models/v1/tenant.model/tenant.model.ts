@@ -7,11 +7,6 @@ const tenantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  port: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
   userName: {
     type: String,
     unique: true,
@@ -31,6 +26,11 @@ const tenantSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 1,
+  },
+  port: {
+    type: String,
+    required: true,
+    unique: true,
   },
 });
 

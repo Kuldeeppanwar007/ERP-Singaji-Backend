@@ -31,6 +31,7 @@ import {
   countryRoutes,
   organizationRoutes,
   userRoutes,
+  tenantRouter,
 } from "@routes/v1/index";
 
 // // Initialize database connection
@@ -43,6 +44,7 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/organization", organizationRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1/country", countryRoutes);
+app.use("/api/v1/tenant", tenantRouter);
 
 // Define Port
 const port = process.env.PORT || 3000;

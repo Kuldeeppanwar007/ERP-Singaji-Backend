@@ -9,7 +9,6 @@ import {
   sendVerificationEmail,
   sendRejectionEmail,
   getCountry,
-  registerUser,
   createAddress,
   updateAddressById,
 } from "@service/v1/index";
@@ -31,7 +30,9 @@ export const organizationController = {
     try {
       // Get the organization data from the request body
       const organizationData = req.body;
-
+      const organizationAddressCopy = structuredClone(
+        organizationData.organizationAddress
+      );
       // Check if the email already exists
       const emailExists = await checkOrgEmailExists(
         organizationData.organizationEmail
@@ -48,6 +49,7 @@ export const organizationController = {
       const country = await getCountry(
         organizationData.organizationAddress.country
       );
+
       // Check country are exists or not
       if (!country) {
         logger.error("Country Not Found");
@@ -67,6 +69,7 @@ export const organizationController = {
       if (typeof newAddress === "object") {
         organizationData.organizationAddress = newAddress._id;
       }
+
       // Create the organization
       const newOrganization = await registerOrganization(organizationData);
 
@@ -142,16 +145,25 @@ export const organizationController = {
                         <td><strong>${organizationData.organizationName}<strong/></td>
                     </tr>
                     <tr>
+                        <th>Type</th>
+                        <td>${organizationData.organizationType}</td>
+                    </tr>
+                    <tr>
+                        <th>Admin Name</th>
+                        <td>${organizationData.adminName}</td>
+                    </tr>
+                    <tr>
                         <th>Email</th>
                         <td><strong>${organizationData.organizationEmail}<strong/></td>
                     </tr>
                     <tr>
+                    <th>Phone</th>
+                    <td>${organizationData.organizationPhone}</td>
+                    </tr>
+
+                    <tr>
                         <th>Plan Type</th>
                         <td>${organizationData.planType}</td>
-                    </tr>
-                    <tr>
-                        <th>Phone</th>
-                        <td>${organizationData.organizationPhone}</td>
                     </tr>
                     <tr>
                         <th>Website</th>
@@ -159,15 +171,7 @@ export const organizationController = {
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td>${organizationData.organizationAddress.city}</td>
-                    </tr>
-                    <tr>
-                        <th>Type</th>
-                        <td>${organizationData.organizationType}</td>
-                    </tr>
-                    <tr>
-                        <th>Admin Name</th>
-                        <td>${organizationData.adminName}</td>
+                        <td>Street : ${organizationAddressCopy.street}<br>City : ${organizationAddressCopy.city} <br>District : ${organizationAddressCopy.district} <br>Pincode : ${organizationAddressCopy.pincode}<br>State : ${organizationAddressCopy.state} <br>Country : ${organizationAddressCopy.country}</td>
                     </tr>
                 </table>
                 <p>If you have any questions, feel free to contact us.</p>
@@ -178,7 +182,7 @@ export const organizationController = {
             </div>
         </body>
         </html>
-        
+
       `,
       });
       if (!status) {
@@ -381,19 +385,20 @@ export const organizationController = {
         .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
     }
   },
-
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName } = <organization>req.body;
+      const { organizationId, status, tenantId } = <organization>req.body;
 
-      const tenant = await Tenant.findOne({ tenantName: tenantName });
-      const tenantId = tenant ? tenant._id : null;
+      // const tenant = await Tenant.findOne({ tenantName: tenantName });
+      // const tenantId = tenant ? tenant._id : null;
 
       const Organization = await getOrganizationById(organizationId);
 
       // If no organizations then return data not found
       if (!Organization)
-        return res.json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+        return res
+          .status(404)
+          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
 
       // Send email notification based on status
       if (status === "APPROVED") {

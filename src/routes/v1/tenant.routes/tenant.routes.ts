@@ -2,18 +2,15 @@
 import express from "express";
 
 // Import Controllers
-import { userController } from "@controllers/v1/index";
+import { tenantController } from "@controllers/v1/index";
 
 // Create Router
 const router = express.Router();
 
-// ROUTES : RegisterUser
-router.post("/register", userController.registerUser);
+// Router
+router.post("/createTenant", tenantController.createTenant);
+router.get("/getTenants", tenantController.getTenants);
+router.get("/getTenant/:id", tenantController.getTenantById);
+router.patch("/updateTenant/:id", tenantController.updateTenantById);
 
-// // ROUTES : LoginUser
-router.post("/login", userController.loginUser);
-
-// // ROUTES : AllUsers
-router.get("/getUsers", userController.getUsers);
-
-export default router
+export default router;

@@ -23,6 +23,7 @@ const responseMessages = {
   USER_NOT_CREATED: "User not created",
   COUNTRY_NOT_FOUND: "Country not found !",
   COUNTRY_CREATED: "Country created successfully !",
+  ALREADY_EXITS: "Data Already Exists !",
 };
 
 export default responseMessages;

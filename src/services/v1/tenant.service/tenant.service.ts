@@ -1,20 +1,36 @@
+import { tenantDto } from "@dto/tenant.dto";
 import { Tenant } from "@models/v1/index";
+import { generateHash } from "@utils/index";
+import { logger } from "@utils/logger.util";
 
 // Create a new tenant
-const createTenant = async (tenantData: any) => {
+export const createTenant = async (tenantData: tenantDto) => {
   try {
-    const newTenant = new Tenant(tenantData);
-    const savedTenant = await newTenant.save();
-    return savedTenant;
+    // password hashing
+    tenantData.password = generateHash(tenantData.password);
+
+    // Create new Tenant
+    let newTenant = new Tenant(tenantData);
+    newTenant = await newTenant.save();
+
+    if (newTenant) {
+      logger.info("Tenant successfully created");
+    }
+    return newTenant;
   } catch (error) {
+    logger.error(error);
     return false;
   }
 };
 
 // Get all tenants
-const getAllTenants = async () => {
+export const getTenants = async () => {
   try {
     const tenants = await Tenant.find();
+    
+    if (tenants) {
+      logger.info("Get Tenants Successfully");
+    }
     return tenants;
   } catch (error) {
     return false;
@@ -22,9 +38,12 @@ const getAllTenants = async () => {
 };
 
 // Get tenant by ID
-const getTenantById = async (tenantId: string) => {
+export const getTenantById = async (tenantId: string) => {
   try {
     const tenant = await Tenant.findById(tenantId);
+    if (tenant) {
+      logger.info("Get Tenant Successfully");
+    }
     return tenant;
   } catch (error) {
     return false;
@@ -32,31 +51,27 @@ const getTenantById = async (tenantId: string) => {
 };
 
 // Update tenant by ID
-const updateTenantById = async (tenantId: string, updateData: any) => {
+export const updateTenantById = async (tenantId: string, updateData: any) => {
   try {
     const updatedTenant = await Tenant.findByIdAndUpdate(tenantId, updateData, {
       new: true,
     });
+    if (updatedTenant) {
+      logger.info("Get Tenant Successfully");
+    }
     return updatedTenant;
   } catch (error) {
     return false;
   }
 };
 
-// Delete tenant by ID
-const deleteTenantById = async (tenantId: string) => {
+// Check tenant exists dynamically
+export const checkTenantExists = async (key: string, value: string) => {
   try {
-    const deletedTenant = await Tenant.findByIdAndDelete(tenantId);
-    return deletedTenant;
+    const query = { [key]: value };
+    const tenant = await Tenant.findOne(query);
+    return !!tenant; // This will return true if tenant exists, otherwise false
   } catch (error) {
     return false;
   }
-};
-
-export default {
-  createTenant,
-  getAllTenants,
-  getTenantById,
-  updateTenantById,
-  deleteTenantById,
 };
