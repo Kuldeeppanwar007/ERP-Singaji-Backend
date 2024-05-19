@@ -7,6 +7,7 @@ import { roleController } from "@controllers/v1/index";
 const router: Router = express.Router();
 
 router.post("/create", roleController.createRole);
+router.get("/get/:role", roleController.getRoleByName);
 router.get("/getAll", roleController.getRoles);
 
 export { router as roleRoutes };

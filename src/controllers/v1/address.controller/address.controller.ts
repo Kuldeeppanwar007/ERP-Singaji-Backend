@@ -1,5 +1,4 @@
-import { responseMessages } from "@config/index";
-import { logger } from "@utils/index";
+import { Request, Response } from "express";
 import {
   createAddress,
   getAddressById,
@@ -7,114 +6,129 @@ import {
   updateAddressById,
   deleteAddressById,
 } from "@service/v1/index";
-import { Request, Response } from "express";
+import { RESPONSE_MESSAGES } from "@config/responseMessages.config";
+import { ApiError, ApiResponse } from "@utils/index";
+import { Country } from "@models/v1/index";
 
 export const addressController = {
-  // Create Address
+  // CREATE ADDRESS
   createAddress: async (req: Request, res: Response) => {
     try {
       const addressData = req.body;
-      const address = await createAddress(addressData);
-      logger.info("Address Created Successfully!");
-      return res.status(201).json({
-        hasError: false,
-        data: address,
-      });
-    } catch (err) {
-      logger.error(err);
-      return res.status(500).json({
-        hasError: true,
-        message: responseMessages.INTERNAL_SERVER_ERROR,
-      });
+      const newAddress = await createAddress(addressData);
+      if (!newAddress) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.ADDRESS.ERROR.NOT_FOUND));
+      }
+      return res
+        .status(201)
+        .json(
+          new ApiResponse(
+            201,
+            RESPONSE_MESSAGES.ADDRESS.SUCCESS.CREATE,
+            newAddress
+          )
+        );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Get Address by ID
+  // GET ADDRESS BY ID
   getAddressById: async (req: Request, res: Response) => {
     try {
-      const addressId = req.params.id;
+      const addressId = req.params.addressId;
       const address = await getAddressById(addressId);
       if (!address) {
-        return res.status(404).json({
-          hasError: true,
-          message: responseMessages.ADDRESS_NOT_FOUND,
-        });
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.ADDRESS.ERROR.NOT_FOUND));
       }
-      logger.info("Address Retrieved Successfully");
-      return res.status(200).json({
-        hasError: false,
-        data: address,
-      });
-    } catch (err) {
-      logger.error(err);
-      return res.status(500).json({
-        hasError: true,
-        message: responseMessages.INTERNAL_SERVER_ERROR,
-      });
+      return res.json(
+        new ApiResponse(200, RESPONSE_MESSAGES.ADDRESS.SUCCESS.FOUND, address)
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Get All Addresses
+  // GET ALL ADDRESSES
   getAllAddresses: async (req: Request, res: Response) => {
     try {
-      const allAddresses = await getAllAddresses();
-      if (!allAddresses || allAddresses.length === 0) {
-        return res.status(404).json({
-          hasError: true,
-          message: responseMessages.ADDRESS_NOT_FOUND,
-        });
+      const addresses = await getAllAddresses();
+      if (!addresses) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.ADDRESS.ERROR.NOT_FOUND));
       }
-      logger.info("All Addresses Retrieved Successfully");
-      return res.status(200).json({
-        hasError: false,
-        data: allAddresses,
-      });
-    } catch (err) {
-      logger.error(err);
-      return res.status(500).json({
-        hasError: true,
-        message: responseMessages.INTERNAL_SERVER_ERROR,
-      });
+      return res.json(
+        new ApiResponse(200, RESPONSE_MESSAGES.ADDRESS.SUCCESS.FOUND, addresses)
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Update Address
-  updateAddress: async (req: Request, res: Response) => {
+  // UPDATE ADDRESS BY ID
+  updateAddressById: async (req: Request, res: Response) => {
     try {
-      const addressId = req.params.id;
+      const addressId = req.params.addressId;
       const updatedData = req.body;
+
+      // Check if country exists (if updating the country)
+      if (updatedData.country) {
+        const country = await Country.findById(updatedData.country);
+        if (!country) {
+          return res
+            .status(404)
+            .json(new ApiError(404, RESPONSE_MESSAGES.COUNTRY.ERROR.NOT_FOUND));
+        }
+      }
+
       const updatedAddress = await updateAddressById(addressId, updatedData);
-      logger.info("Address updated successfully");
-      return res.status(200).json({
-        hasError: false,
-        message: responseMessages.ADDRESS_UPDATED,
-        data: updatedAddress,
-      });
-    } catch (err) {
-      logger.error(err);
-      return res.status(500).json({
-        hasError: true,
-        message: responseMessages.INTERNAL_SERVER_ERROR,
-      });
+      if (!updatedAddress) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.ADDRESS.ERROR.NOT_FOUND));
+      }
+      return res.json(
+        new ApiResponse(
+          200,
+          RESPONSE_MESSAGES.ADDRESS.SUCCESS.UPDATE,
+          updatedAddress
+        )
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Delete Address
-    deleteAddress: async (req: Request, res: Response) => {
-      try {
-        const addressId = req.params.id;
-        await deleteAddressById(addressId);
-        logger.info("Address deleted successfully");
-        return res.status(200).json({
-          hasError: false,
-          message: responseMessages.ADDRESS_DELETED,
-        });
-      } catch (err) {
-        logger.error(err);
-        return res.status(500).json({
-          hasError: true,
-          message: responseMessages.INTERNAL_SERVER_ERROR,
-        });
+  // DELETE ADDRESS BY ID
+  deleteAddressById: async (req: Request, res: Response) => {
+    try {
+      const addressId = req.params.addressId;
+      const result = await deleteAddressById(addressId);
+      if (!result) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.ADDRESS.ERROR.NOT_FOUND));
       }
-    },
+      return res.json(
+        new ApiResponse(200, RESPONSE_MESSAGES.ADDRESS.SUCCESS.DELETE)
+      );
+    } catch (error) {
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
+    }
+  },
 };

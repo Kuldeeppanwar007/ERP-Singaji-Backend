@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
 import { logger } from "@utils/index";
-import { Organization, Tenant } from "@models/v1/index";
-import { organization } from "@dto/organization.dto";
+import { Organization } from "@models/v1/index";
+import { ITenant } from "@dto/tenant.dto";
 
 // Define a function to connect to MongoDB using mongoose
 export const mongooseConnection = (url: string) => {
@@ -15,9 +15,9 @@ export const mongooseConnection = (url: string) => {
   mongoose
     .connect(url)
     .then(() => {
-      console.log("Connected to Database");
+      // console.log("Connected to Database");
 
-      // logger.info("Connected to Database");
+      logger.info("Connected to Database");
     })
     // If there is an error while connecting, log the error to the console
     .catch((err: Error) => {
@@ -27,26 +27,24 @@ export const mongooseConnection = (url: string) => {
 
 // TenantDb connection
 export const getTenantDbConnection = async (organizationId: string) => {
-  // Retrieve Organization with tenantId populated
-  const organization = (await Organization.findById(
-    organizationId
-  )) as organization;
+  const organization = await Organization.findById(organizationId)
+    .populate<{ tenantId: ITenant }>("tenantId")
+    .exec();
 
-  if (!organization) return false;
-
-  // Extract tenant ID
-  const tenantId = organization.tenantId;
-  const tenant = await Tenant.findById(tenantId);
-  if (tenant) {
-    const dbUrl = `mongodb://${tenant.host}:${tenant.port}/${tenant.userName}`;
-    const tenantDb = mongoose
-      .createConnection(dbUrl)
-      .once("open", () => {
-        logger.info("Connected to Database");
-      })
-      .on("error", (error: Error) => {
-        console.log(`Error connecting to database: ${error}`);
-      });
-    return tenantDb;
+  if (!organization) {
+    return null;
   }
+
+  const tenant = organization.tenantId;
+
+  const dbUrl = `mongodb://${tenant.host}:${tenant.port}/${tenant.userName}/${tenant.password}/${tenant.tenantName}`;
+  const tenantDb = mongoose
+    .createConnection(dbUrl)
+    .once("open", () => {
+      logger.info("Connected to Database");
+    })
+    .on("error", (error: Error) => {
+      console.log(`Error connecting to database: ${error}`);
+    });
+  return tenantDb;
 };

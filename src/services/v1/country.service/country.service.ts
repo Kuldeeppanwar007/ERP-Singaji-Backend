@@ -1,12 +1,13 @@
 import { Country } from "@models/v1/index";
-import { country } from "@dto/country.dto";
+import { ICountry } from "@dto/country.dto";
 import { logger } from "@utils/logger.util";
 
-export const addCountry = async (countryData: country) => {
+// creat new Country
+export const createCountry = async (countryData: ICountry) => {
   try {
     const country = await Country.create(countryData);
-
-    return country;
+    logger.info("Country Created Successfully");
+    return country.save();
   } catch (err) {
     logger.error(err);
     return false;
@@ -14,27 +15,15 @@ export const addCountry = async (countryData: country) => {
 };
 
 // Country Exist or not
-export const getCountry = async (countryName: string) => {
+export const getCountry = async (countryName: ICountry) => {
   try {
+    logger.info(`Getting address with Name: ${countryName}`);
+
     const country = await Country.findOne({ countryName });
 
     if (country) {
+      logger.info("Country Found Successfully");
       return country;
-    } else {
-      return false;
-    }
-  } catch (err) {
-    logger.error(err);
-    return false;
-  }
-};
-// Country Exist or not
-export const countryExist = async (countryData: country) => {
-  try {
-    const country = await Country.findOne(countryData);
-
-    if (country) {
-      return true;
     } else {
       return false;
     }

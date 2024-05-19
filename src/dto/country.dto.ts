@@ -1,3 +1,5 @@
-export interface country {
-    countryName: string
+import { Document } from "mongoose";
+
+export interface ICountry extends Document {
+  countryName: string;
 }

@@ -1,51 +1,62 @@
-import winston  = require('winston')
-import DailyRotateFile from 'winston-daily-rotate-file';
-const { combine, timestamp,json, printf} = winston.format;
-var httpContext = require('express-http-context');
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+import { v4 as uuidv4 } from "uuid";
+import httpContext from "express-http-context";
 
+const { combine, timestamp, json, printf } = winston.format;
 
-// Custom format to include reqId
-const httpContextFormat = printf(({ level, message, timestamp }) => {
-    const reqId = httpContext.get('reqId') || 'N/A';
-    return `${timestamp} [${level}] ${message} reqId: ${reqId}`;
+// Custom format to include reqId and optional additional data
+const customFormat = printf(({ level, message, timestamp, ...metadata }) => {
+  const reqId = httpContext.get("reqId") || "N/A";
+  return `${timestamp} [${level}] ${message} reqId: ${reqId} ${JSON.stringify(
+    metadata
+  )}`;
 });
 
-// Filter the error logs
-const errorFilter = winston.format((info, opts) => {
-    return info.level === 'error' ? info : false;
-  });
-  
-  // Filter the info logs
-  const infoFilter = winston.format((info, opts) => {
-    return info.level === 'info' ? info : false;
-  });
-  
-  export const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'http',
-    format: combine(timestamp(), json(),httpContextFormat),
-    transports: [
-        
-      new DailyRotateFile({
-        dirname: 'logs/combinedLogs',
-        filename: 'combined-%DATE%.log',
-        datePattern: 'YYYY-MM-DD',
-        maxFiles: '14d',
-      }),
-      new DailyRotateFile({
-        dirname: 'logs/errorLogs',
-        filename: 'app-error-%DATE%.log',
-        datePattern: 'YYYY-MM-DD',
-        maxFiles: '14d',
-        level: 'error',
-        format: combine(errorFilter(), timestamp(), json(),httpContextFormat),
-      }),
-      new DailyRotateFile({
-        dirname:"logs/infoLogs",
-        filename: 'app-info%DATE%.log',
-        datePattern: 'YYYY-MM-DD',
-        maxFiles: '14d',
-        level: 'info',
-        format: combine(infoFilter(), timestamp(), json(),httpContextFormat),
-      }),
-    ],
-  });
+// Log filters (for separate error and info logs)
+const errorFilter = winston.format((info, opts) =>
+  info.level === "error" ? info : false
+);
+const infoFilter = winston.format((info, opts) =>
+  info.level === "info" ? info : false
+);
+
+// Create the logger instance
+export const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || "info", 
+  format: combine(timestamp(), json(), customFormat),
+  transports: [
+    new DailyRotateFile({
+      filename: "logs/combined-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      zippedArchive: true,
+      maxSize: "20m",
+      maxFiles: "14d",
+    }),
+    new DailyRotateFile({
+      filename: "logs/error-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      zippedArchive: true,
+      maxSize: "20m",
+      maxFiles: "14d",
+      level: "error",
+      format: combine(errorFilter(), timestamp(), json(), customFormat),
+    }),
+    new DailyRotateFile({
+      filename: "logs/info-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      zippedArchive: true,
+      maxSize: "20m",
+      maxFiles: "14d",
+      level: "info",
+      format: combine(infoFilter(), timestamp(), json(), customFormat),
+    }),
+    new winston.transports.Console({
+      // Add console transport for development
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      ),
+    }),
+  ],
+});

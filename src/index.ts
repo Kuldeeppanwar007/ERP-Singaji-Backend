@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
+import { logger } from "@utils/index";
 import { v4 as uuidv4 } from "uuid";
 import httContext from "express-http-context";
 import {
@@ -46,5 +47,5 @@ app.use("/api/v1/role", roleRoutes);
 
 // Listening Server
 app.listen(port, () => {
-  console.log(`🚀 App Started: http://localhost:${port}`);
+  logger.info(`🚀 App Started: http://localhost:${port}`);
 });

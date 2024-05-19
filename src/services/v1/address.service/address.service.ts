@@ -1,18 +1,28 @@
 // Import the Address model
 import { Address } from "@models/v1/index";
-import { address } from "@dto/address.dto";
-
-// Import Utilities
+import { IAddress } from "@dto/address.dto";
 import { logger } from "@utils/index";
+import { createCountry, getCountry } from "@service/v1/index";
+import { ICountry } from "@dto/country.dto";
 
 // Define a function for creating an address
-export const createAddress = async (addressData: address) => {
+export const createAddress = async (addressData: IAddress) => {
   try {
+    const country = <ICountry>addressData.country;
+    // Check if country exists
+    let Country = await getCountry(country);
+    if (!Country) {
+      Country = await createCountry(country);
+    }
+    addressData.country = country._id;
+
     // Create a new address instance
     const newAddress = new Address(addressData);
 
     // Save the address to the database
     const savedAddress = await newAddress.save();
+
+    logger.info("Address Created Successfully!");
 
     // Return the saved address
     return savedAddress;
@@ -69,7 +79,7 @@ export const getAllAddresses = async () => {
 // Define a function for updating an address by ID
 export const updateAddressById = async (
   addressId: string,
-  updatedData: object
+  updatedData: IAddress
 ) => {
   try {
     // Update address

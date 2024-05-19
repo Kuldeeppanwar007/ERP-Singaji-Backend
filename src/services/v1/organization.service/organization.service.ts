@@ -1,19 +1,21 @@
 // Import the organization model
 import { Organization } from "@models/v1/index";
-import { organization } from "dto/organization.dto";
+import { IOrganization } from "dto/organization.dto";
 import { signupUser } from "middlewares/userAuth.middleware";
-import { registerUser } from "@service/v1/index";
-// Import Utilities
 import { logger, sendMail } from "@utils/index";
+import { IUser } from "@dto/user.dto";
+import { registerUser } from "@service/v1/index";
 
 // Define a function for creating an organization
-export const registerOrganization = async (organizationData: organization) => {
+export const registerOrganization = async (organizationData: IOrganization) => {
   try {
     // Create a new organization instance
     const newOrganization = new Organization(organizationData);
 
     // Save the organization to the database
     const savedOrganization = await newOrganization.save();
+
+    logger.info("New Organization Created Successfully !");
 
     // send the organization request email
     sendMail({
@@ -34,8 +36,6 @@ export const registerOrganization = async (organizationData: organization) => {
     </div>
   `,
     });
-
-    logger.info("New Organization Created Successfully !");
 
     // Return the saved organization
     return savedOrganization;
@@ -64,9 +64,7 @@ export const getOrganizations = async () => {
 export const getOrganizationById = async (_id: string) => {
   try {
     // Geting Organization By ID
-    logger.info("Entered In GetORG By Id");
     const organizationData = await Organization.findById(_id);
-    console.log(organizationData);
 
     // If No Organization then return false
     if (!organizationData) return false;
@@ -79,13 +77,17 @@ export const getOrganizationById = async (_id: string) => {
   }
 };
 // Define a function for update organization by ID
-export const updateOrganizationById = async (_id: string, payload: object) => {
+export const updateOrganizationById = async (
+  organizationId: string,
+  payload: any
+) => {
   try {
     // Update Organization
-    const updatedOrganization = await Organization.findByIdAndUpdate({
-      _id,
+    const updatedOrganization = await Organization.findOneAndUpdate(
+      { _id: organizationId },
       payload,
-    });
+      { new: true }
+    );
     // If No organization then return false
     if (!updatedOrganization) return false;
     // Return updated organizations
@@ -107,6 +109,7 @@ export const checkOrgEmailExists = async (email: string) => {
 
     // If an organization was found, return true
     if (newOrganization) {
+      logger.info("Organization with email already exists");
       return true;
     }
 
@@ -119,7 +122,7 @@ export const checkOrgEmailExists = async (email: string) => {
 };
 
 // register Organiation Admin
-export const registerOrganizationAdmin = async (adminData: any) => {
+export const registerOrganizationAdmin = async (adminData: IUser) => {
   // register user in DB
   registerUser(adminData);
 
@@ -130,7 +133,7 @@ export const registerOrganizationAdmin = async (adminData: any) => {
   await signupUser(email, password);
 };
 
-// send organization verification email
+// send organization aprooved email
 export const sendVerificationEmail = async (user: {
   name: string;
   email: string;
@@ -149,6 +152,7 @@ export const sendVerificationEmail = async (user: {
   });
 };
 
+// send organization reject email
 export const sendRejectionEmail = (userEmail: string) => {
   sendMail({
     from: `<${process.env.EMAIL_USER}>`,

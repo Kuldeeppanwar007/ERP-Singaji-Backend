@@ -36,7 +36,7 @@ const organizationSchema = new mongoose.Schema(
       type: String,
       enum: ["BASIC", "ADVANCED", "ENTERPRISE"],
     },
-    tanentId: {
+    tenantId: {
       type: Schema.Types.ObjectId,
       ref: "tenant",
     },

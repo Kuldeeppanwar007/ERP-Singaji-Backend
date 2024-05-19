@@ -2,14 +2,12 @@
 import { organizationController } from "@controllers/v1/index";
 import express from "express";
 
-// Middlewares
-
 // Create Router
 const router = express.Router();
 
 router.post("/register", organizationController.registerOrganization);
 
-router.put("/verify", organizationController.verifyOrganization);
+router.patch("/verify/:id", organizationController.verifyOrganization);
 
 router.get("/getOrganizations", organizationController.getAllOrganizations);
 
@@ -20,4 +18,4 @@ router.get("/getOrganization/:id", organizationController.getOrganizationById);
 //   organizationController.updateOrganization
 // );
 
-export  {router as organizationRoutes};
+export { router as organizationRoutes };

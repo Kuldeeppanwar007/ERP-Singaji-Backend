@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 // Schema for tenant details in master database
 const tenantSchema = new mongoose.Schema({
+  tenantName: { type: "string", required: true },
   host: {
     type: String,
     required: true,
@@ -32,8 +33,6 @@ const tenantSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  
 });
 
 export const Tenant = mongoose.model("tenant", tenantSchema);
-

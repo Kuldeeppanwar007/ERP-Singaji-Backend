@@ -1,7 +1,3 @@
-import {responseMessages} from "./responseMessages.config";
-import admin from './firebase.config'
-
-export {
-  responseMessages,
-  admin
-};
+export * from "./config";
+export * from "./firebase.config";
+export * from "./responseMessages.config";

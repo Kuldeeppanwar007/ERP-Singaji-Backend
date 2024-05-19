@@ -7,6 +7,6 @@ const router = express.Router()
 router.post("/add", countryController.addCountry)
 
 // ROUTES: Get country
-router.get("/country", countryController.getCountries)
+router.get("/getall", countryController.getCountries)
 
 export {router as countryRoutes}

@@ -1,4 +1,6 @@
-// Import Services, Configerations
+import { Request, Response } from "express";
+import { ApiResponse, ApiError, generatePassword, logger } from "@utils/index";
+import { RESPONSE_MESSAGES } from "@config/index";
 import {
   checkOrgEmailExists,
   registerOrganization,
@@ -8,224 +10,249 @@ import {
   getOrganizationById,
   sendVerificationEmail,
   sendRejectionEmail,
+  createCountry,
   getCountry,
-  registerUser,
   createAddress,
-  updateAddressById,
+  getRoleByName,
+  checkUserEmailExists,
 } from "@service/v1/index";
-import { responseMessages } from "@config/index";
-import { Request, Response } from "express";
-import { generatePassword, logger, ApiError, ApiResponse } from "@utils/index";
-import { organization } from "@dto/organization.dto";
-import { Tenant } from "@models/v1/tenant.model/tenant.model";
-// Define a controllers
+import { IUser } from "@dto/user.dto";
+import { Organization } from "@models/v1/index";
+
 export const organizationController = {
-  // FUNCTION: Create an organization and send email to the superadmin
+  // Create a new organization
   registerOrganization: async (req: Request, res: Response) => {
     try {
-      // Get the organization data from the request body
       const organizationData = req.body;
 
-      // Check if the email already exists
       const emailExists = await checkOrgEmailExists(
         organizationData.organizationEmail
       );
-
-      // Check and Return if exits
       if (emailExists) {
-        logger.error("Email already exists");
         return res
           .status(400)
-          .json(new ApiError(400, responseMessages.EMAIL_EXISTS));
-      }
-      // Get Country's ObjectId
-      const country = await getCountry(
-        organizationData.organizationAddress.country
-      );
-      // Check country are exists or not
-      if (!country) {
-        logger.error("Country Not Found");
-        return res
-          .status(404)
-          .json(new ApiError(404, responseMessages.COUNTRY_NOT_FOUND));
-      }
-      // if Country are an object then get {_id} from this object and set into address's country
-      if (typeof country === "object") {
-        organizationData.organizationAddress.country = country._id;
+          .json(
+            new ApiError(
+              400,
+              RESPONSE_MESSAGES.ORGANIZATION.ERROR.ORGANIZATION_EXIST
+            )
+          );
       }
 
-      // Store Address in Address collection
+      // Country Handling
+      let country = await getCountry(
+        organizationData.organizationAddress.country
+      );
+      if (!country) {
+        country = await createCountry(
+          organizationData.organizationAddress.country
+        );
+      }
+
+      // create address with country id
+      if (country && typeof country !== "boolean") {
+        organizationData.organizationAddress.country = country._id;
+      }
       const newAddress = await createAddress(
         organizationData.organizationAddress
       );
-      if (typeof newAddress === "object") {
-        organizationData.organizationAddress = newAddress._id;
+      if (!newAddress) {
+        return res
+          .status(400)
+          .json(new ApiError(400, RESPONSE_MESSAGES.ADDRESS.ERROR.CREATE));
       }
-      // Create the organization
+
+      // Create the organization with the new address ID
+      organizationData.organizationAddress = newAddress._id;
       const newOrganization = await registerOrganization(organizationData);
 
       if (!newOrganization) {
         return res
           .status(400)
-          .json(new ApiError(400, responseMessages.ORGANIZATION_NOTCREATED));
+          .json(new ApiError(400, RESPONSE_MESSAGES.ORGANIZATION.ERROR.CREATE));
       }
-      
-      // Send a response with the new organization
+
       return res
         .status(201)
         .json(
           new ApiResponse(
             201,
-            responseMessages.ORGANIZATION_CREATED_SUCCESSFULLY,
+            RESPONSE_MESSAGES.ORGANIZATION.SUCCESS.CREATE,
             newOrganization
           )
         );
     } catch (error) {
-      // If an error occurred, send a response with the error message
-      logger.error(error);
       return res
         .status(500)
-        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
-
-  // FUNCTION: Verify the organization by superadmin
-  // verifyOrganization: async(req:Request, res: Response)=>{
-  //   try{
-
-  //     const _id = req.params.id
-  //     const requestBody = req.body
-
-  //     const organization: any = await verifyOrganization(_id, requestBody)
-
-  //     console.log(organization.organizationEmail)
-
-  //     const tempPass: string = generatePassword(20);
-
-  //     const user = admin.auth().createUser({
-  //       email: organization.organizationEmail,
-  //       password:tempPass,
-  //       emailVerified: false,
-  //       disabled: false
-  //     })
-
-  // return res.status(200).json(new ApiResponse(200, {...organization ,...user}, responseMessages.STATUS_UPDATE))
-
-  //   }catch(error){
-  //     logger.error(error);
-  //     res
-  //       .status(500)
-  //       .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
-  //   }
-
-  // },
+  // retrieve all organizations
   getAllOrganizations: async (req: Request, res: Response) => {
     try {
-      // Getting All Organizations
       const allOrganizations = await getOrganizations();
-      console.log(allOrganizations);
 
-      // If no organizations then return data not found
       if (!allOrganizations)
-        res
-          .status(404)
-          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+        return res.json(
+          new ApiError(404, RESPONSE_MESSAGES.ORGANIZATION.ERROR.NOT_FOUND)
+        );
 
-      // Return Response
       return res
         .status(200)
         .json(
-          new ApiResponse(200, responseMessages.DATA_FOUND, allOrganizations)
+          new ApiResponse(
+            200,
+            RESPONSE_MESSAGES.ORGANIZATION.SUCCESS.FOUND,
+            allOrganizations
+          )
         );
     } catch (error) {
-      // If an error occurred, send a response with the error message
       logger.error(error);
       res
         .status(500)
-        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
+  // retrieve organization by id
   getOrganizationById: async (req: Request, res: Response) => {
     try {
-      const id: any = req.params;
-      // Getting All Organizations
-      const allOrganizations = await getOrganizationById(id);
+      const { id } = req.params;
+      const organization = await getOrganizationById(id);
 
-      // If no organizations then return data not found
-      if (!allOrganizations)
+      if (!organization)
         res
           .status(404)
-          .json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
+          .json(
+            new ApiError(404, RESPONSE_MESSAGES.ORGANIZATION.ERROR.NOT_FOUND)
+          );
 
-      // Return Response
       return res
         .status(200)
         .json(
-          new ApiResponse(200, responseMessages.DATA_FOUND, allOrganizations)
+          new ApiResponse(
+            200,
+            RESPONSE_MESSAGES.ORGANIZATION.SUCCESS.FOUND,
+            organization
+          )
         );
     } catch (error) {
-      // If an error occurred, send a response with the error message
       logger.error(error);
       res
         .status(500)
-        .json(new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR));
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
+  // verify organization
   verifyOrganization: async (req: Request, res: Response) => {
     try {
-      const { organizationId, status, tenantName } = <organization>req.body;
+      const organizationId = req.params.id;
+      const organizationData = req.body;
+      const { tenantId } = organizationData;
 
-      const tenant = await Tenant.findOne({ tenantName: tenantName });
-      const tenantId = tenant ? tenant._id : null;
+      // check if organization exists
+      const organization = await getOrganizationById(organizationId);
 
-      const Organization = await getOrganizationById(organizationId);
+      // organization not found
+      if (!organization) {
+        return res.json(
+          new ApiError(404, RESPONSE_MESSAGES.ORGANIZATION.ERROR.NOT_FOUND)
+        );
+      }
 
-      // If no organizations then return data not found
-      if (!Organization)
-        return res.json(new ApiError(404, responseMessages.DATA_NOT_FOUND));
-
-      // Send email notification based on status
-      if (status === "APPROVED") {
-        // Update the organization status & Assign a tenantDB
+      // organization Approval
+      if (organizationData.status === "APPROVED") {
+        // organization update to APPROVED
+        const updateData = {
+          status: organizationData.status,
+          tenantId: organizationData.tenantId,
+        };
+        // update organization status & assign tenant
         const updatedOrganization = await updateOrganizationById(
           organizationId,
-          { status, tenantId }
+          updateData
         );
-
+        // organization update failed
         if (!updatedOrganization) return false;
+        logger.info("Organization Approved");
 
-        // create organization admin
-        const temporaryPassword: string = generatePassword(10);
-        const user = {
-          name: Organization.adminName,
-          email: Organization.organizationEmail,
+        // create a organization admin role
+        const role = await getRoleByName("ORGANIZATION_ADMIN");
+
+        // If no role then return false
+        if (!role) return false;
+
+        // generate temporary password for organization admin
+        const temporaryPassword = generatePassword(10);
+
+        // create user object
+        const userData: IUser = {
+          name: organization.adminName,
+          email: organization.organizationEmail,
           password: temporaryPassword,
-          role: "ADMIN",
-          organizationId: Organization._id,
+          role: role[0]._id,
+          organizationId: organization._id,
           tenantId: tenantId,
         };
-        // Register the organization Admin
-        const User = await registerOrganizationAdmin(user);
 
-        // send email to organization admin
-        await sendVerificationEmail(user);
+        // check if user email exists
+        const userExist = await checkUserEmailExists(userData.email);
 
-        // Return success response
+        if (userExist) {
+          return res.json(
+            new ApiError(409, RESPONSE_MESSAGES.USERS.ERROR.USER_EXIST)
+          );
+        }
+
+        // register user as organization admin in DB
+        const user = await registerOrganizationAdmin(userData);
+
+        // send email for successful verification
+        await sendVerificationEmail(userData);
+
+        // return success response
         return res.json(
-          new ApiResponse(200, responseMessages.ORGANIZATION_VERIFIED, {
-            updatedOrganization,
-            User,
-          })
+          new ApiResponse(
+            200,
+            RESPONSE_MESSAGES.ORGANIZATION.SUCCESS.VERIFIED,
+            {
+              updatedOrganization,
+              user,
+            }
+          )
         );
-      } else if (status === "REJECTED") {
-        // Send rejection email
-        sendRejectionEmail(Organization.organizationEmail);
+      }
+      // Organization Rejection
+      else if (organizationData.status === "REJECTED") {
+        // update organization status to REJECTED
+        const updateData = {
+          status: organizationData.status,
+        };
+        // update organization status & assign tenant
+        const updatedOrganization = await updateOrganizationById(
+          organizationId,
+          updateData
+        );
+
+        // organization update failed
+        if (!updatedOrganization) return false;
+
+        // send email for rejection
+        sendRejectionEmail(organization.organizationEmail);
+
+        // return reject response
+        return res.json(
+          new ApiResponse(
+            200,
+            RESPONSE_MESSAGES.ORGANIZATION.ERROR.REJECTED,
+            organization
+          )
+        );
       }
     } catch (error) {
       logger.error(error);
       return res.json(
-        new ApiError(500, responseMessages.INTERNAL_SERVER_ERROR)
+        new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR)
       );
     }
   },

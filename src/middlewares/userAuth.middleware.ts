@@ -21,6 +21,17 @@ export const signupUser = async (email: string, password: string) => {
 };
 // registerUser("rajputnik911@gmail.com", "123456");
 
+// verify user login token
+const verifyUserLoginToken = async (token: string) => {
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    return decodedToken;
+  } catch (error) {
+    logger.error(error);
+    return false;
+  }
+};
+
 // reset password
 // export const resetPassword = async (email: string) => {
 //   try {

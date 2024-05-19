@@ -2,103 +2,131 @@ import { Request, Response } from "express";
 import {
   registerUser,
   getUserByEmail,
-  checkOrgEmailExists,
   getAllUsers,
   updateUser,
   deleteUser,
+  checkUserEmailExists,
 } from "@service/v1/index";
-import { UserCreateInput } from "@dto/user.dto";
-import { responseMessages } from "@config/responseMessages.config";
-import { logger } from "@utils/index";
-import { ApiResponse, ApiError } from "@utils/index";
+import { RESPONSE_MESSAGES } from "@config/responseMessages.config";
+import { ApiError, ApiResponse } from "@utils/index";
 
 export const userController = {
-  // Register User
+  // register user
   registerUser: async (req: Request, res: Response) => {
     try {
-      const requestData = req.body as UserCreateInput;
-      // Check if email already exists
-      if (await checkOrgEmailExists(requestData.email)) {
-        logger.info("Email Already Exists");
-        return res.json(new ApiResponse(409, responseMessages.EMAIL_EXISTS));
-      }
-      // Save User
-      const user = await registerUser(requestData);
-      logger.info(`User Registered Successfully! ${user}`);
+      const requestData = req.body;
 
-      return res.json(
-        new ApiResponse(200, responseMessages.USER_REGISTERED_SUCCESSFULLY,user)
-      );
+      if (await checkUserEmailExists(requestData.email)) {
+        return res
+          .status(409)
+          .json(new ApiError(409, RESPONSE_MESSAGES.USERS.ERROR.USER_EXIST));
+      }
+
+      const user = await registerUser(requestData);
+      return res
+        .status(201)
+        .json(
+          new ApiResponse(201, RESPONSE_MESSAGES.USERS.SUCCESS.CREATE, user)
+        );
     } catch (error) {
-      logger.error(error);
-      return res.json(
-        new ApiResponse(500, responseMessages.FAILED_TO_REGISTER_USER)
-      );
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Get User by Email
+  // get user by email
   getUserByEmail: async (req: Request, res: Response) => {
     try {
       const email = req.params.email;
       const user = await getUserByEmail(email);
+      if (!user) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.USERS.ERROR.NOT_FOUND));
+      }
+
       return res.json(
-        new ApiResponse(200, responseMessages.USER_FETCHED_SUCCESSFULLY,user)
+        new ApiResponse(200, RESPONSE_MESSAGES.USERS.SUCCESS.FOUND, user)
       );
     } catch (error) {
-      logger.error(error);
-      return res.json(
-        new ApiResponse(500, responseMessages.FAILED_TO_GET_USER_BY_EMAIL)
-      );
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Get All Users
+  // get all users
   getAllUsers: async (req: Request, res: Response) => {
     try {
       const users = await getAllUsers();
-      if(!users) return;
+
+      if (!users || users.length === 0) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.USERS.ERROR.NOT_FOUND));
+      }
+
       return res.json(
-        new ApiResponse(200, responseMessages.USERS_FETCHED_SUCCESSFULLY,users)
+        new ApiResponse(200, RESPONSE_MESSAGES.USERS.SUCCESS.FOUND, users)
       );
     } catch (error) {
-      logger.error(error);
-      return res.json(
-        new ApiResponse(500, responseMessages.FAILED_TO_GET_ALL_USERS)
-      );
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Update User
+  // update user
   updateUser: async (req: Request, res: Response) => {
     try {
       const userId = req.params.userId;
       const payload = req.body;
       const updatedUser = await updateUser(userId, payload);
+
+      if (!updatedUser) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.USERS.ERROR.NOT_FOUND));
+      }
+
       return res.json(
-        new ApiResponse(200, responseMessages.USER_UPDATED_SUCCESSFULLY,updatedUser)
+        new ApiResponse(
+          200,
+          RESPONSE_MESSAGES.USERS.SUCCESS.UPDATE,
+          updatedUser
+        )
       );
     } catch (error) {
-      logger.error(error);
-      return res.json(
-        new ApiResponse(500, responseMessages.FAILED_TO_UPDATE_USER)
-      );
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 
-  // Delete User
+  // delete user
   deleteUser: async (req: Request, res: Response) => {
     try {
       const userId = req.params.userId;
       const deletedUser = await deleteUser(userId);
+
+      if (!deletedUser) {
+        return res
+          .status(404)
+          .json(new ApiError(404, RESPONSE_MESSAGES.USERS.ERROR.NOT_FOUND));
+      }
+
       return res.json(
-        new ApiResponse(200, responseMessages.USER_DELETED_SUCCESSFULLY,deletedUser)
+        new ApiResponse(
+          200,
+          RESPONSE_MESSAGES.USERS.SUCCESS.DELETE,
+          deletedUser
+        )
       );
     } catch (error) {
-      logger.error(error);
-      return res.json(
-        new ApiResponse(500, responseMessages.FAILED_TO_DELETE_USER)
-      );
+      return res
+        .status(500)
+        .json(new ApiError(500, RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR));
     }
   },
 };

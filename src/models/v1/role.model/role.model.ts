@@ -12,13 +12,11 @@ const roleSchema = new mongoose.Schema({
     required: true,
   },
   description: String,
-  organizationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
-    required: true,
-  },
+  // organizationId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Organization",
+  //   required: true,
+  // },
 });
 
-const Role = mongoose.model("Role", roleSchema); 
-
-module.exports = Role;
+export const Role = mongoose.model("Role", roleSchema);
