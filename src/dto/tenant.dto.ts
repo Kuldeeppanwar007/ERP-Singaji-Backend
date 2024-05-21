@@ -1,10 +1,14 @@
-import { ObjectId, Document } from "mongoose";
+import { Types } from 'mongoose';
 
-export interface ITenant extends Document {
+export interface ITenant {
+  _id?: Types.ObjectId;  
   tenantName: string;
-  userName: string;
-  password: string;
   host: string;
-  port: string;
+  port: number;
+  userName: string;
+  password: {
+    hash: string;
+    salt: string;
+  };
   limit: number;
 }
