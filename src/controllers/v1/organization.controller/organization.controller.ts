@@ -210,7 +210,7 @@ export const organizationController = {
       const updateData = {
         status: organizationData.status,
       };
-      // update organization status & assign tenant
+      // update organization status
       const updatedOrganization = await updateOrganizationById(
         organizationId,
         updateData

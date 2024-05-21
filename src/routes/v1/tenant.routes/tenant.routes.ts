@@ -4,18 +4,18 @@ import { tenantController } from "@controllers/v1/index";
 const router = express.Router();
 
 // Create tenant
-router.post("/", tenantController.createTenant);
+router.post("/create", tenantController.createTenant);
 
 // Get all tenants
-router.get("/", tenantController.getAllTenants);
+router.get("/getall", tenantController.getAllTenants);
 
 // Get tenant by ID
-router.get("/:id", tenantController.getTenantById);
+router.get("/get/:id", tenantController.getTenantById);
 
 // Update tenant by ID
-router.put("/:id", tenantController.updateTenantById);
+router.patch("/update/:id", tenantController.updateTenantById);
 
 // Delete tenant by ID
-router.delete("/:id", tenantController.deleteTenantById);
+router.delete("/delete/:id", tenantController.deleteTenantById);
 
 export { router as tennatRoutes };

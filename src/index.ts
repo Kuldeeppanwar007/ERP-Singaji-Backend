@@ -11,6 +11,7 @@ import {
   organizationRoutes,
   userRoutes,
   roleRoutes,
+  tennatRoutes,
 } from "@routes/v1/index";
 import { mongooseConnection } from "@utils/index";
 import { morganMiddleware, rateLimitMiddleware } from "middlewares";
@@ -44,6 +45,7 @@ app.use("/api/v1/organization", organizationRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1/country", countryRoutes);
 app.use("/api/v1/role", roleRoutes);
+app.use("/api/v1/tenant", tennatRoutes);
 
 // Listening Server
 app.listen(port, () => {
