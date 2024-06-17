@@ -8,11 +8,7 @@ import { logger } from "@utils/index";
 // Define a function for creating an address
 export const createAddress = async (addressData: address) => {
   try {
-    // Create a new address instance
-    const newAddress = new Address(addressData);
-
-    // Save the address to the database
-    const savedAddress = await newAddress.save();
+   const savedAddress = await Address.create(addressData)
 
     // Return the saved address
     return savedAddress;

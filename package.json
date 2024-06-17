@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./build/index.js",
-    "dev": "nodemon --watch 'src/**/*.ts'  --exec ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "dev": "nodemon --watch 'src/**/*.ts' --watch 'src/**/*.yaml  --exec ts-node-dev -r tsconfig-paths/register src/index.ts"
   },
   "author": "ERP's Backend Developers",
   "license": "ISC",
@@ -25,7 +25,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5",

@@ -1,0 +1,173 @@
+swagger: "2.0"
+info:
+  title: Singaji ERP Project
+  description: This is the Singaji ERP project
+  version: 1.0.0
+
+host: localhost:3001
+basePath: /api/v1
+
+tags:
+  - name: Address
+    description: All the routes of address
+
+paths:
+  /address/add:
+    post:
+      tags:
+        - Address
+      summary: Create a new address
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Address data
+          required: true
+          schema:
+            $ref: '#/definitions/Address'  # Reference to the Address schema in components
+      responses:
+        '201':
+          description: Address created successfully
+          schema:
+            $ref: '#/definitions/AddressResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /address/getAddress:
+    get:
+      tags:
+        - Address
+      summary: Get all addresses
+      responses:
+        '200':
+          description: List of all addresses
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AddressResponse'
+        '404':
+          description: No addresses found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /address/getAddress/{id}:
+    get:
+      tags:
+        - Address
+      summary: Get address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Address retrieved successfully
+          schema:
+            $ref: '#/definitions/AddressResponse'
+        '404':
+          description: Address not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+    put:
+      tags:
+        - Address
+      summary: Update address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Updated address data
+          required: true
+          schema:
+            $ref: '#/definitions/Address'  # Reference to the Address schema in components
+      responses:
+        '200':
+          description: Address updated successfully
+          schema:
+            $ref: '#/definitions/AddressResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+    delete:
+      tags:
+        - Address
+      summary: Delete address by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Address deleted successfully
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  Address:
+    type: object
+    properties:
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      postalCode:
+        type: string
+      country:
+        type: string
+    required:
+      - street
+      - city
+      - state
+      - postalCode
+      - country
+
+  AddressResponse:
+    type: object
+    properties:
+      hasError:
+        type: boolean
+      data:
+        $ref: '#/definitions/Address'
+
+  ErrorResponse:
+    type: object
+    properties:
+      hasError:
+        type: boolean
+      message:
+        type: string
+
+  SuccessResponse:
+    type: object
+    properties:
+      hasError:
+        type: boolean
+      message:
+        type: string
